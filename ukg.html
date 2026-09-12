@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UKG – Bachchon ki Paathshala</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-level="ukg">
+
+  <header class="site-header">
+    <div class="brand">
+      <div class="badge">🖍️</div>
+      <div class="brand-text">
+        <div class="kicker">बच्चों की पाठशाला</div>
+        <h1>Little Stars Learning</h1>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <div class="level-hero uk">
+      <a class="back" href="index.html">← Sab levels</a>
+      <h1 id="levelName">UKG</h1>
+      <p id="levelTagline">Padhna, likhna aur thoda ganit</p>
+      <span class="float-emoji" id="levelEmoji">🎓</span>
+    </div>
+
+    <nav class="selector-bar">
+      <a class="pg" href="playgroup.html">Play Group</a>
+      <a class="nu" href="nursery.html">Nursery</a>
+      <a class="lk" href="lkg.html">LKG</a>
+      <a class="uk active" href="ukg.html">UKG</a>
+    </nav>
+
+    <div class="section-title month-picker-title">
+      <span class="dot theme-color"></span>
+      <h2>Saal Bhar ka Course</h2>
+      <span class="count" id="monthTitle"></span>
+    </div>
+    <div class="month-tabs" id="monthTabs"></div>
+
+    <div class="section-title">
+      <span class="dot theme-color"></span>
+      <h2>Padhai ki Saamagri</h2>
+      <span class="count" id="learningCount"></span>
+    </div>
+    <div class="card-grid" id="learningGrid"></div>
+
+    <div class="section-title">
+      <span class="dot theme-color"></span>
+      <h2>Exercise</h2>
+      <span class="count" id="exerciseCount"></span>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+    <p id="progressLabel" style="font-weight:700;color:#6b6680;margin:8px 0 0;font-size:.85rem;"></p>
+
+    <div class="card-grid" id="exerciseList" style="margin-top:14px;"></div>
+
+    <div class="toolbar">
+      <button class="btn" id="printBtn">🖨️ Print karein</button>
+      <button class="btn" id="resetBtn">↺ Is mahine ka progress reset karein</button>
+      <button class="btn" id="resetYearBtn">↺↺ Poore saal ka progress reset karein</button>
+    </div>
+
+  </main>
+
+  <footer>Bachchon ke pyaar se banaya gaya 💛</footer>
+
+  <script src="content.js"></script>
+  <script src="level.js"></script>
+</body>
+</html>

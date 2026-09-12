@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bachchon ki Paathshala — Level Chuniye</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="confetti-bg" id="confettiBg"></div>
+
+  <header class="site-header">
+    <div class="brand">
+      <div class="badge">🖍️</div>
+      <div class="brand-text">
+        <div class="kicker">बच्चों की पाठशाला</div>
+        <h1>Little Stars Learning</h1>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <h1 class="display">Aaj kya <span class="swirl">seekhna</span> hai?</h1>
+      <p>Neeche apni class (level) chuniye — usi ki padhai aur exercise turant khul jaayenge.</p>
+    </section>
+
+    <section class="level-grid">
+      <a class="level-card pg" href="playgroup.html">
+        <span class="big-emoji">🧸</span>
+        <h2>Play Group</h2>
+        <p>Rang, aakar, fal aur janwar</p>
+        <span class="go">Shuru karo →</span>
+      </a>
+
+      <a class="level-card nu" href="nursery.html">
+        <span class="big-emoji">🚌</span>
+        <h2>Nursery</h2>
+        <p>A-Z aur ginti 1-10</p>
+        <span class="go">Shuru karo →</span>
+      </a>
+
+      <a class="level-card lk" href="lkg.html">
+        <span class="big-emoji">📚</span>
+        <h2>LKG</h2>
+        <p>Shabd, varnamala, ginti 1-50</p>
+        <span class="go">Shuru karo →</span>
+      </a>
+
+      <a class="level-card uk" href="ukg.html">
+        <span class="big-emoji">🎓</span>
+        <h2>UKG</h2>
+        <p>Vaakya, jod-ghatao, matraayein</p>
+        <span class="go">Shuru karo →</span>
+      </a>
+    </section>
+  </main>
+
+  <footer>Bachchon ke pyaar se banaya gaya 💛</footer>
+
+  <script>
+    // halke rang-birange gol dots background mein — sirf sajawat ke liye
+    const wrap = document.getElementById('confettiBg');
+    const colors = ['#FF6F91','#4FC3F7','#FFB74D','#81C784'];
+    for (let i = 0; i < 14; i++) {
+      const s = document.createElement('span');
+      const size = 10 + Math.random() * 26;
+      s.style.width = size + 'px';
+      s.style.height = size + 'px';
+      s.style.left = Math.random() * 100 + '%';
+      s.style.top = Math.random() * 100 + '%';
+      s.style.background = colors[i % colors.length];
+      wrap.appendChild(s);
+    }
+  </script>
+</body>
+</html>

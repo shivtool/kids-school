@@ -1,0 +1,86 @@
+BACHCHON KI PAATHSHALA — POORE SAAL KA CONTENT (UPDATE KAISE KAREIN)
+======================================================================
+
+NAYA KYA HAI?
+--------------
+Ab har level (Play Group, Nursery, LKG, UKG) mein POORE EK SAAL ka
+syllabus hai — 12 mahino mein baant kar. Har mahine ke apne:
+  - 3 "Padhai ki Saamagri" (learning) topic
+  - 2 functional exercise
+hain, taaki bachcha step-by-step, mahine dar mahine seekhta chale.
+
+Website par ab har level-page ke upar ek "Saal Bhar ka Course" section
+hai jismein 12 mahino ke tabs (1 se 12) dikhte hain. Jis mahine par
+click karoge, sirf usi mahine ki padhai aur exercise dikhengi. Har
+mahina poora hone par uske tab par ✅ ka nishaan aa jaata hai.
+
+FILES (7):
+-----------
+1. index.html      -> Home page (4 level ke card)
+2. playgroup.html   -> Play Group ka page
+3. nursery.html      -> Nursery ka page
+4. lkg.html          -> LKG ka page
+5. ukg.html          -> UKG ka page
+6. content.js        -> SAARI PADHAI/EXERCISE ki jankari isi file mein hai
+7. style.css, level.js -> Design aur logic (in files ko chhedne ki zaroorat nahi)
+
+CONTENT.JS KA NAYA STRUCTURE:
+-------------------------------
+Har level ke andar ab "months" naam ki ek list hai, jisme 12 objects
+hain (Mahina 1 se Mahina 12 tak). Har mahine ke andar:
+
+  {
+    name: "Mahina 5 · Sabziyaan (Vegetables)",
+    learning: [ {emoji, title, desc}, ... ],
+    exercises: [ {type: "...", ...}, ... ]
+  }
+
+NAYA TOPIC YA EXERCISE JODNA HO TO:
+------------------------------------
+Jis mahine mein jodna hai, uske "learning" ya "exercises" list mein
+naya item jodein — bilkul waise hi jaise pehle karte the:
+
+  { emoji: "🐟", title: "Machhli", desc: "Paani mein rehne wale janwar." },
+
+EXERCISE TYPES (5 tarah ke, sab functional hain):
+  1) quiz  -> sawaal poochta hai, options mein se sahi jawab chunna hota hai
+  2) match -> do column mein jodiyaan milaani hoti hain
+  3) trace -> ungli/mouse se akshar, number ya shape (circle/square/
+              triangle/star) ke upar likhna hota hai
+  4) color -> rang chunkar chitra (balloon/fish/circle/sun/star/apple/
+              umbrella) par click karke bharna
+  5) spell -> bikhre huye akshar sahi kram mein click karke shabd banana
+
+Naya block bilkul upar diye gaye tarike se copy-paste karke apna
+sawaal/jawaab daal dein (content.js file ke shuru mein poora tarika
+likha hai).
+
+NAYA MAHINA JODNA HO TO:
+--------------------------
+Kisi bhi level ke "months" list mein { name, learning, exercises } ka
+ek poora naya block copy-paste karke jod dein. Website apne aap naya
+tab bana degi.
+
+Bas file SAVE kar dein — website apne aap update ho jaayegi.
+
+PROGRESS:
+----------
+- Har mahine ka progress alag se save hota hai (browser mein).
+- "Is mahine ka progress reset karein" button sirf khuli hui mahine ka
+  progress mitata hai.
+- "Poore saal ka progress reset karein" button poore saal ka progress
+  mita deta hai — dhyan se use karein.
+
+DESIGN:
+--------
+- Mobile, tablet, PC, TV — sab par apne aap fit ho jaata hai (responsive).
+- Har level ka apna rang hai: Play Group (gulabi), Nursery (aasmani),
+  LKG (narangi), UKG (hara).
+- Month tabs horizontally scroll karte hain agar screen chhoti ho.
+- "Print karein" button se worksheet jaisa print bhi nikal sakte hain.
+
+KAISE KHOLEIN:
+---------------
+"index.html" file ko kisi bhi browser (Chrome/Edge) mein double-click
+karke khol dein. Poora project isi ek folder mein rakhein, kisi file ko
+folder se bahar na nikaalein.
