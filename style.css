@@ -351,7 +351,7 @@ button{ font-family:inherit; cursor:pointer; }
   border-radius:18px;
   display:flex; align-items:center; justify-content:center;
   background: var(--card-accent, linear-gradient(145deg,#FF6F91,#FFB74D)) !important;
-  box-shadow: 0 8px 16px rgba(46,42,61,0.18);
+  box-shadow: 0 8px 16px rgba(27, 24, 36, 0.815);
 }
 .topic-card h3{
   position:relative; z-index:1;
@@ -546,7 +546,7 @@ button{ font-family:inherit; cursor:pointer; }
   font-weight:800;
   font-size:.88rem;
   box-shadow: var(--shadow);
-  background:#fff;
+  background:#f7c6c6;
 }
 .btn:hover{ transform: translateY(-2px); }
 
