@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Little Stars Learning — Shareer ke Ang Chart</title>
+<style>
+  :root{
+    --cream:#FFFDF6;
+    --ink:#2E2A3D;
+    --muted:#6b6680;
+    --face:#c2185b;   --face-grad1:#FFE1EC; --face-grad2:#F06292;
+    --limbs:#1f9bd6;  --limbs-grad1:#B3E5FC; --limbs-grad2:#4FC3F7;
+    --organs:#8e3fa3; --organs-grad1:#E1BEE7; --organs-grad2:#BA68C8;
+  }
+  html{ font-size:16px; }
+  html.view-mobile{ font-size:15px; }
+  html.view-pc{ font-size:17px; }
+  html.view-tv{ font-size:27px; }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    font-family:'Baloo 2','Nunito','Segoe UI',Arial,sans-serif;
+    color:var(--ink);
+    -webkit-tap-highlight-color:transparent;
+    padding-bottom:2.5rem;
+    transition:font-size .15s ease;
+  }
+  header{ text-align:center; padding:1.375rem 1rem 0.625rem; }
+  header h1{ margin:0; font-size:clamp(1.375rem,5vw,2.25rem); font-weight:800; }
+  header p{ margin:0.375rem 0 0; color:var(--muted); font-weight:700; font-size:clamp(0.8125rem,3vw,1rem); }
+  .hint{
+    display:inline-flex; align-items:center; gap:0.5rem;
+    background:#fff; border:2px dashed #d8d3ea; border-radius:999px;
+    padding:0.5rem 1.125rem; margin-top:0.625rem; font-weight:700; font-size:0.875rem; color:var(--ink);
+  }
+  .hint .dot{ width:0.625rem;height:0.625rem;border-radius:50%; background:#FF6F91; animation:pulse 1.4s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.6);opacity:.4;} }
+
+  nav.tabs{
+    display:flex; justify-content:center; flex-wrap:wrap; gap:0.5rem;
+    padding:1rem 0.75rem 0.25rem; position:sticky; top:0; background:var(--cream); z-index:20;
+  }
+  nav.tabs button{
+    border:none; cursor:pointer; font-family:inherit; font-weight:800;
+    font-size:clamp(0.8125rem,2.6vw,1rem); padding:0.625rem 1rem; border-radius:1rem;
+    background:#fff; color:var(--muted); box-shadow:0 3px 0 rgba(0,0,0,.06);
+    display:flex;align-items:center;gap:0.375rem; transition:transform .15s ease;
+  }
+  nav.tabs button:active{ transform:scale(.95); }
+  nav.tabs button.active{ color:#fff; box-shadow:0 4px 0 rgba(0,0,0,.15); }
+  nav.tabs button[data-tab="face"].active{ background:var(--face-grad2); }
+  nav.tabs button[data-tab="limbs"].active{ background:var(--limbs-grad2); }
+  nav.tabs button[data-tab="organs"].active{ background:var(--organs-grad2); }
+
+  .toolbar{
+    display:flex; justify-content:center; flex-wrap:wrap; gap:0.75rem;
+    margin:0.875rem auto 0.25rem;
+  }
+  .segmented{
+    display:flex; align-items:center; gap:0.25rem;
+    background:#fff; border-radius:999px; padding:0.25rem; box-shadow:0 2px 0 rgba(0,0,0,.06);
+  }
+  .segmented .seg-label{
+    font-weight:800; font-size:0.75rem; color:var(--muted); padding:0 0.5rem 0 0.625rem;
+  }
+  .segmented button{
+    border:none; background:transparent; cursor:pointer; font-family:inherit;
+    font-weight:800; font-size:0.8125rem; padding:0.5rem 1rem; border-radius:999px; color:var(--muted);
+    transition:transform .1s ease;
+  }
+  .segmented button:active{ transform:scale(.94); }
+  .segmented button.active{ background:var(--ink); color:#fff; }
+
+  main{ max-width:62.5rem; margin:0 auto; padding:0.875rem 1rem 0.5rem; }
+  section.panel{ display:none; }
+  section.panel.active{ display:block; animation:fadein .25s ease; }
+  @keyframes fadein{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .section-title{ text-align:center; font-weight:800; font-size:clamp(1.125rem,3.6vw,1.5rem); margin:1.125rem 0 0.75rem; }
+  .face .section-title{ color:var(--face); }
+  .limbs .section-title{ color:var(--limbs); }
+  .organs .section-title{ color:var(--organs); }
+
+  .grid{ display:grid; gap:0.625rem; grid-template-columns:repeat(auto-fill,minmax(7.5rem,1fr)); }
+
+  .card{
+    background:#fff; border-radius:1rem; border:2px solid #eee; padding:0.625rem 0.375rem 0.75rem;
+    text-align:center; cursor:pointer; user-select:none; position:relative;
+    transition:transform .12s ease, box-shadow .12s ease;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:7.5rem;
+  }
+  .card:active{ transform:scale(.93); }
+  .card.speaking{ animation:bounce .5s ease infinite alternate; }
+  @keyframes bounce{ from{ transform:scale(1); } to{ transform:scale(1.08); } }
+  .card .glow{ position:absolute; inset:-4px; border-radius:1.25rem; pointer-events:none; opacity:0; }
+  .card.speaking .glow{
+    opacity:1; box-shadow:0 0 0 4px currentColor, 0 0 22px 6px currentColor;
+    animation:glowpulse 1s ease-in-out infinite;
+  }
+  @keyframes glowpulse{ 0%,100%{ opacity:.35; } 50%{ opacity:.85; } }
+  .card .spark{ position:absolute; font-size:1rem; opacity:0; pointer-events:none; }
+  .card.speaking .spark{ animation:spark-fly 0.9s ease-out infinite; }
+  @keyframes spark-fly{
+    0%{ opacity:1; transform:translate(0,0) scale(.6) rotate(0deg); }
+    100%{ opacity:0; transform:translate(var(--dx),var(--dy)) scale(1.3) rotate(180deg); }
+  }
+
+  .part-cell{ min-height:7.5rem; }
+  .part-cell.face-cell{ color:var(--face); border-color:#ffd6e6; }
+  .part-cell.limbs-cell{ color:var(--limbs); border-color:#cdeeff; }
+  .part-cell.organs-cell{ color:var(--organs); border-color:#f1defa; }
+  .part-cell .emoji{ font-size:2.25rem; }
+  .part-cell .name-en{ font-size:0.875rem; font-weight:800; color:var(--ink); margin-top:0.25rem;}
+  .part-cell .name-hi{ font-size:0.8125rem; font-weight:700; }
+
+  /* ---------- SINGLE / FLASHCARD VIEW ---------- */
+  .single-wrap{ display:none; padding:0.625rem 0 1.125rem; }
+  .single-nav-row{
+    display:flex; align-items:center; justify-content:center; gap:0.625rem;
+    max-width:32.5rem; margin:0 auto;
+  }
+  .nav-btn{
+    flex:0 0 auto; width:3.25rem; height:3.25rem; border-radius:50%; border:none;
+    background:#fff; box-shadow:0 4px 0 rgba(0,0,0,.1); font-size:1.375rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; color:var(--ink);
+    transition:transform .12s ease;
+  }
+  .nav-btn:active{ transform:scale(.88); }
+  .nav-btn:disabled{ opacity:.3; cursor:default; }
+
+  .single-shell{
+    flex:1 1 auto; max-width:21.25rem; min-height:17.5rem; border-radius:2rem; padding:1.625rem 1.125rem 1.375rem;
+    text-align:center; position:relative; cursor:pointer; user-select:none;
+    box-shadow:0 10px 0 rgba(0,0,0,.08);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.375rem;
+    transition:transform .12s ease;
+  }
+  .single-shell:active{ transform:scale(.97); }
+  .single-shell.pulse{ animation:shellpulse 0.6s ease infinite alternate; }
+  @keyframes shellpulse{ from{ box-shadow:0 10px 0 rgba(0,0,0,.08); } to{ box-shadow:0 10px 0 rgba(0,0,0,.08), 0 0 0 8px rgba(255,255,255,.55); } }
+
+  .single-shell.theme-face{ background:linear-gradient(160deg,var(--face-grad1),var(--face-grad2)); }
+  .single-shell.theme-limbs{ background:linear-gradient(160deg,var(--limbs-grad1),var(--limbs-grad2)); }
+  .single-shell.theme-organs{ background:linear-gradient(160deg,var(--organs-grad1),var(--organs-grad2)); }
+
+  .single-group-label{
+    background:rgba(255,255,255,.55); color:var(--ink); font-weight:800; font-size:0.75rem;
+    padding:0.25rem 0.875rem; border-radius:999px; margin-bottom:0.25rem;
+  }
+  .single-emoji{ font-size:5rem; line-height:1; }
+  .single-sub-en{ font-size:1.5rem; font-weight:800; color:#fff; text-shadow:0 2px 0 rgba(0,0,0,.1); }
+  .single-sub-hi{ font-size:1.625rem; font-weight:800; color:#3b2b00; background:rgba(255,255,255,.6); padding:0.125rem 0.875rem; border-radius:0.875rem; }
+  .single-replay{
+    margin-top:0.5rem; border:none; background:rgba(255,255,255,.75); border-radius:999px;
+    font-weight:800; font-size:0.8125rem; padding:0.5rem 1rem; cursor:pointer; color:var(--ink);
+    display:flex; align-items:center; gap:0.375rem;
+  }
+  .single-replay:active{ transform:scale(.93); }
+  .single-progress{ text-align:center; margin-top:0.875rem; font-weight:800; color:var(--muted); font-size:0.875rem; }
+  .single-progress .bar{
+    width:13.75rem; height:0.5rem; background:#eee; border-radius:99px; margin:0.375rem auto 0; overflow:hidden;
+  }
+  .single-progress .bar-fill{ height:100%; background:var(--ink); border-radius:99px; transition:width .2s ease; }
+
+  footer{ text-align:center; color:var(--muted); font-weight:700; font-size:0.8125rem; margin-top:1.625rem; }
+
+  @media (max-width:380px){
+    .grid{ grid-template-columns:repeat(auto-fill,minmax(6.5rem,1fr)); }
+  }
+  @media (min-width:1400px){
+    main{ max-width:75rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧑 Little Stars Learning 🧑</h1>
+  <p>शरीर के अंग — जिस पर उंगली रखो, वो बोल पड़े!</p>
+  <div class="hint"><span class="dot"></span> Tap karke sunoo — dheeme aur saaf awaaz mein!</div>
+</header>
+
+<nav class="tabs">
+  <button data-tab="face" class="active">😀 चेहरा</button>
+  <button data-tab="limbs">✋ हाथ-पैर</button>
+  <button data-tab="organs">🫀 अंदरूनी अंग</button>
+</nav>
+
+<div class="toolbar">
+  <div class="segmented" id="mode-toggle">
+    <span class="seg-label">View:</span>
+    <button data-mode="grid" class="active">🔳 Sabhi</button>
+    <button data-mode="single">🎠 Ek-Ek</button>
+  </div>
+  <div class="segmented" id="screen-toggle">
+    <span class="seg-label">Screen:</span>
+    <button data-screen="mobile">📱 Mobile</button>
+    <button data-screen="pc">💻 PC</button>
+    <button data-screen="tv">📺 TV</button>
+  </div>
+</div>
+
+<main>
+
+  <section class="panel face active" id="panel-face">
+    <div class="section-title">चेहरे के अंग · Face Parts</div>
+    <div class="grid-wrap">
+      <div class="grid" id="grid-face"></div>
+    </div>
+    <div class="single-wrap" id="single-face-wrap">
+      <div class="single-nav-row">
+        <button class="nav-btn" data-prev="face">◀</button>
+        <div class="single-shell" id="single-face"></div>
+        <button class="nav-btn" data-next="face">▶</button>
+      </div>
+      <div class="single-progress" id="progress-face"></div>
+    </div>
+  </section>
+
+  <section class="panel limbs" id="panel-limbs">
+    <div class="section-title">हाथ और पैर · Hands &amp; Legs</div>
+    <div class="grid-wrap">
+      <div class="grid" id="grid-limbs"></div>
+    </div>
+    <div class="single-wrap" id="single-limbs-wrap">
+      <div class="single-nav-row">
+        <button class="nav-btn" data-prev="limbs">◀</button>
+        <div class="single-shell" id="single-limbs"></div>
+        <button class="nav-btn" data-next="limbs">▶</button>
+      </div>
+      <div class="single-progress" id="progress-limbs"></div>
+    </div>
+  </section>
+
+  <section class="panel organs" id="panel-organs">
+    <div class="section-title">अंदरूनी अंग · Internal Organs</div>
+    <div class="grid-wrap">
+      <div class="grid" id="grid-organs"></div>
+    </div>
+    <div class="single-wrap" id="single-organs-wrap">
+      <div class="single-nav-row">
+        <button class="nav-btn" data-prev="organs">◀</button>
+        <div class="single-shell" id="single-organs"></div>
+        <button class="nav-btn" data-next="organs">▶</button>
+      </div>
+      <div class="single-progress" id="progress-organs"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>Little Stars Learning — बच्चों की पाठशाला</footer>
+
+<script>
+/* ================= SPEECH ENGINE (same as chart.html) ================= */
+let voices = [];
+function loadVoices(){ voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : []; }
+if ('speechSynthesis' in window){
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+function pickVoice(lang){
+  if(!voices.length) return null;
+  let exact = voices.find(v => v.lang && v.lang.toLowerCase() === lang.toLowerCase());
+  if(exact) return exact;
+  let starts = voices.find(v => v.lang && v.lang.toLowerCase().startsWith(lang.slice(0,2)));
+  return starts || null;
+}
+const EN_RATE = 0.62, EN_PITCH = 1.1;
+const HI_RATE = 0.72, HI_PITCH = 1.1;
+function speakOne(text, lang, rate, pitch){
+  return new Promise((resolve) => {
+    if(!('speechSynthesis' in window)){ resolve(); return; }
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang;
+    const v = pickVoice(lang);
+    if(v) u.voice = v;
+    u.rate = rate;
+    u.pitch = pitch;
+    u.onend = resolve;
+    u.onerror = resolve;
+    window.speechSynthesis.speak(u);
+  });
+}
+function pause(ms){ return new Promise(r => setTimeout(r, ms)); }
+async function speakSequence(items){
+  if('speechSynthesis' in window) window.speechSynthesis.cancel();
+  for(let i=0;i<items.length;i++){
+    const item = items[i];
+    await speakOne(item.text, item.lang, item.rate, item.pitch);
+    if(i < items.length-1) await pause(380);
+  }
+}
+function enItem(text){ return {text, lang:'en-IN', rate:EN_RATE, pitch:EN_PITCH}; }
+function hiItem(text){ return {text, lang:'hi-IN', rate:HI_RATE, pitch:HI_PITCH}; }
+
+/* visual feedback while a grid card speaks */
+function animateCard(card, colorHex){
+  document.querySelectorAll('.card.speaking').forEach(c => c.classList.remove('speaking'));
+  card.classList.add('speaking');
+  card.style.color = colorHex;
+  spawnSparks(card);
+  clearTimeout(card._t);
+  card._t = setTimeout(() => card.classList.remove('speaking'), 2600);
+}
+const sparkEmojis = ['✨','⭐','💫'];
+function spawnSparks(card){
+  card.querySelectorAll('.spark').forEach(o => o.remove());
+  for(let i=0;i<4;i++){
+    const s = document.createElement('span');
+    s.className = 'spark';
+    s.textContent = sparkEmojis[i % sparkEmojis.length];
+    const angle = Math.random()*Math.PI*2;
+    const dist = 30 + Math.random()*20;
+    s.style.setProperty('--dx', (Math.cos(angle)*dist)+'px');
+    s.style.setProperty('--dy', (Math.sin(angle)*dist)+'px');
+    s.style.left = (40 + Math.random()*20 - 10) + '%';
+    s.style.top = (40 + Math.random()*20 - 10) + '%';
+    s.style.animationDelay = (i*0.08)+'s';
+    card.appendChild(s);
+  }
+}
+function makeCard(className, colorHex, innerHTML, onTap){
+  const card = document.createElement('div');
+  card.className = 'card ' + className;
+  card.innerHTML = '<div class="glow"></div>' + innerHTML;
+  card.addEventListener('click', () => { animateCard(card, colorHex); onTap(); });
+  return card;
+}
+
+/* ================= DATA — BODY PARTS ================= */
+const faceData = [
+  {en:'Face', hi:'चेहरा', emoji:'😀'},
+  {en:'Head', hi:'सिर', emoji:'👤'},
+  {en:'Eye', hi:'आँख', emoji:'👁️'},
+  {en:'Ear', hi:'कान', emoji:'👂'},
+  {en:'Nose', hi:'नाक', emoji:'👃'},
+  {en:'Mouth', hi:'मुँह', emoji:'👄'},
+  {en:'Tooth', hi:'दांत', emoji:'🦷'},
+  {en:'Tongue', hi:'जीभ', emoji:'👅'},
+];
+
+const limbsData = [
+  {en:'Hand', hi:'हाथ', emoji:'✋'},
+  {en:'Finger', hi:'उंगली', emoji:'☝️'},
+  {en:'Arm', hi:'बांह', emoji:'💪'},
+  {en:'Leg', hi:'पैर', emoji:'🦵'},
+  {en:'Foot', hi:'पाँव', emoji:'🦶'},
+  {en:'Nail', hi:'नाखून', emoji:'💅'},
+];
+
+const organsData = [
+  {en:'Brain', hi:'दिमाग', emoji:'🧠'},
+  {en:'Heart', hi:'दिल', emoji:'❤️'},
+  {en:'Lungs', hi:'फेफड़े', emoji:'🫁'},
+  {en:'Bone', hi:'हड्डी', emoji:'🦴'},
+  {en:'Blood', hi:'खून', emoji:'🩸'},
+];
+
+/* ================= GRID RENDER ================= */
+function renderGrid(containerId, data, cellClass, colorVar){
+  const container = document.getElementById(containerId);
+  data.forEach(({en, hi, emoji}) => {
+    const card = makeCard('part-cell ' + cellClass, colorVar,
+      `<div class="emoji">${emoji}</div><div class="name-en">${en}</div><div class="name-hi">${hi}</div>`,
+      () => speakSequence([enItem(en), hiItem(hi)])
+    );
+    container.appendChild(card);
+  });
+}
+renderGrid('grid-face', faceData, 'face-cell', 'var(--face)');
+renderGrid('grid-limbs', limbsData, 'limbs-cell', 'var(--limbs)');
+renderGrid('grid-organs', organsData, 'organs-cell', 'var(--organs)');
+
+/* ================= SINGLE / FLASHCARD VIEW ================= */
+const singleState = {
+  face:   { data: faceData,   index: 0 },
+  limbs:  { data: limbsData,  index: 0 },
+  organs: { data: organsData, index: 0 },
+};
+
+function renderSingle(tab, autoSpeak){
+  const state = singleState[tab];
+  const item = state.data[state.index];
+  const shell = document.getElementById('single-' + tab);
+  const progress = document.getElementById('progress-' + tab);
+
+  const html = `<div class="single-emoji">${item.emoji}</div>
+                <div class="single-sub-en">${item.en}</div>
+                <div class="single-sub-hi">${item.hi}</div>`;
+  const speakItems = [enItem(item.en), hiItem(item.hi)];
+
+  shell.className = 'single-shell theme-' + tab;
+  shell.innerHTML = html + `<button class="single-replay">🔊 Dobara Suno</button>`;
+  shell.onclick = () => { doSpeak(); };
+  shell.querySelector('.single-replay').onclick = (e) => { e.stopPropagation(); doSpeak(); };
+
+  function doSpeak(){
+    shell.classList.add('pulse');
+    speakSequence(speakItems).then(() => shell.classList.remove('pulse'));
+  }
+
+  const pct = Math.round(((state.index+1) / state.data.length) * 100);
+  progress.innerHTML = `${state.index+1} / ${state.data.length}
+    <div class="bar"><div class="bar-fill" style="width:${pct}%"></div></div>`;
+
+  document.querySelector(`[data-prev="${tab}"]`).disabled = state.index === 0;
+  document.querySelector(`[data-next="${tab}"]`).disabled = state.index === state.data.length - 1;
+
+  if(autoSpeak) doSpeak();
+}
+
+document.querySelectorAll('[data-prev]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.prev;
+    const state = singleState[tab];
+    if(state.index > 0){ state.index--; renderSingle(tab, true); }
+  });
+});
+document.querySelectorAll('[data-next]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.next;
+    const state = singleState[tab];
+    if(state.index < state.data.length - 1){ state.index++; renderSingle(tab, true); }
+  });
+});
+
+document.addEventListener('keydown', (e) => {
+  if(viewMode !== 'single') return;
+  const tab = currentTab;
+  if(e.key === 'ArrowRight') document.querySelector(`[data-next="${tab}"]`).click();
+  if(e.key === 'ArrowLeft') document.querySelector(`[data-prev="${tab}"]`).click();
+});
+
+['face','limbs','organs'].forEach(tab => {
+  const shell = document.getElementById('single-' + tab);
+  let startX = null;
+  shell.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, {passive:true});
+  shell.addEventListener('touchend', (e) => {
+    if(startX === null) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    if(Math.abs(dx) > 45){
+      const btn = dx < 0 ? document.querySelector(`[data-next="${tab}"]`) : document.querySelector(`[data-prev="${tab}"]`);
+      if(btn && !btn.disabled) btn.click();
+    }
+    startX = null;
+  });
+});
+
+Object.keys(singleState).forEach(tab => renderSingle(tab, false));
+
+/* ================= TAB + MODE + SCREEN SWITCHING ================= */
+let currentTab = 'face';
+let viewMode = 'grid';
+
+document.querySelectorAll('nav.tabs button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    currentTab = btn.dataset.tab;
+    document.getElementById('panel-' + currentTab).classList.add('active');
+    if('speechSynthesis' in window) window.speechSynthesis.cancel();
+  });
+});
+
+document.getElementById('mode-toggle').querySelectorAll('button[data-mode]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById('mode-toggle').querySelectorAll('button[data-mode]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    viewMode = btn.dataset.mode;
+    document.querySelectorAll('.grid-wrap').forEach(el => el.style.display = viewMode === 'grid' ? '' : 'none');
+    document.querySelectorAll('.single-wrap').forEach(el => el.style.display = viewMode === 'single' ? 'block' : 'none');
+    if('speechSynthesis' in window) window.speechSynthesis.cancel();
+  });
+});
+
+function setScreenMode(mode){
+  document.documentElement.classList.remove('view-mobile','view-pc','view-tv');
+  document.documentElement.classList.add('view-' + mode);
+  document.getElementById('screen-toggle').querySelectorAll('button[data-screen]').forEach(b => {
+    b.classList.toggle('active', b.dataset.screen === mode);
+  });
+}
+document.getElementById('screen-toggle').querySelectorAll('button[data-screen]').forEach(btn => {
+  btn.addEventListener('click', () => setScreenMode(btn.dataset.screen));
+});
+setScreenMode(window.innerWidth < 700 ? 'mobile' : (window.innerWidth > 1400 ? 'pc' : 'pc'));
+</script>
+</body>
+</html>
