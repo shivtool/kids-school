@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Little Stars Learning — Bolne Wala Chart</title>
+<style>
+  :root{
+    --cream:#FFFDF6;
+    --ink:#2E2A3D;
+    --muted:#6b6680;
+    --num:#4c9c53;   --num-grad1:#B9F6CA; --num-grad2:#69C779;
+    --alpha:#1f9bd6; --alpha-grad1:#B3E5FC; --alpha-grad2:#4FC3F7;
+    --varn:#e0a336;  --varn2:#e07648; --varn-grad2:#FFB74D;
+    --shape:#8e3fa3; --shape-grad1:#E1BEE7; --shape-grad2:#BA68C8;
+    --pink:#c2185b;
+  }
+  html{ font-size:16px; }               /* base scale — overridden by view-mobile / view-pc / view-tv */
+  html.view-mobile{ font-size:15px; }
+  html.view-pc{ font-size:17px; }
+  html.view-tv{ font-size:27px; }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    font-family:'Baloo 2','Nunito','Segoe UI',Arial,sans-serif;
+    color:var(--ink);
+    -webkit-tap-highlight-color:transparent;
+    padding-bottom:2.5rem;
+    transition:font-size .15s ease;
+  }
+  header{ text-align:center; padding:1.375rem 1rem 0.625rem; }
+  header h1{ margin:0; font-size:clamp(1.375rem,5vw,2.25rem); font-weight:800; }
+  header p{ margin:0.375rem 0 0; color:var(--muted); font-weight:700; font-size:clamp(0.8125rem,3vw,1rem); }
+  .hint{
+    display:inline-flex; align-items:center; gap:0.5rem;
+    background:#fff; border:2px dashed #d8d3ea; border-radius:999px;
+    padding:0.5rem 1.125rem; margin-top:0.625rem; font-weight:700; font-size:0.875rem; color:var(--ink);
+  }
+  .hint .dot{ width:0.625rem;height:0.625rem;border-radius:50%; background:#FF6F91; animation:pulse 1.4s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.6);opacity:.4;} }
+
+  nav.tabs{
+    display:flex; justify-content:center; flex-wrap:wrap; gap:0.5rem;
+    padding:1rem 0.75rem 0.25rem; position:sticky; top:0; background:var(--cream); z-index:20;
+  }
+  nav.tabs button{
+    border:none; cursor:pointer; font-family:inherit; font-weight:800;
+    font-size:clamp(0.8125rem,2.6vw,1rem); padding:0.625rem 1rem; border-radius:1rem;
+    background:#fff; color:var(--muted); box-shadow:0 3px 0 rgba(0,0,0,.06);
+    display:flex;align-items:center;gap:0.375rem; transition:transform .15s ease;
+  }
+  nav.tabs button:active{ transform:scale(.95); }
+  nav.tabs button.active{ color:#fff; box-shadow:0 4px 0 rgba(0,0,0,.15); }
+  nav.tabs button[data-tab="numbers"].active{ background:var(--num-grad2); }
+  nav.tabs button[data-tab="alphabet"].active{ background:var(--alpha-grad2); }
+  nav.tabs button[data-tab="varnamala"].active{ background:var(--varn2); }
+  nav.tabs button[data-tab="shapes"].active{ background:var(--shape-grad2); }
+
+  .toolbar{
+    display:flex; justify-content:center; flex-wrap:wrap; gap:0.75rem;
+    margin:0.875rem auto 0.25rem;
+  }
+  .segmented{
+    display:flex; align-items:center; gap:0.25rem;
+    background:#fff; border-radius:999px; padding:0.25rem; box-shadow:0 2px 0 rgba(0,0,0,.06);
+  }
+  .segmented .seg-label{
+    font-weight:800; font-size:0.75rem; color:var(--muted); padding:0 0.5rem 0 0.625rem;
+  }
+  .segmented button{
+    border:none; background:transparent; cursor:pointer; font-family:inherit;
+    font-weight:800; font-size:0.8125rem; padding:0.5rem 1rem; border-radius:999px; color:var(--muted);
+    transition:transform .1s ease;
+  }
+  .segmented button:active{ transform:scale(.94); }
+  .segmented button.active{ background:var(--ink); color:#fff; }
+
+  main{ max-width:62.5rem; margin:0 auto; padding:0.875rem 1rem 0.5rem; }
+  section.panel{ display:none; }
+  section.panel.active{ display:block; animation:fadein .25s ease; }
+  @keyframes fadein{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .section-title{ text-align:center; font-weight:800; font-size:clamp(1.125rem,3.6vw,1.5rem); margin:1.125rem 0 0.75rem; }
+  .numbers .section-title{ color:var(--num); }
+  .alphabet .section-title{ color:var(--alpha); }
+  .varnamala .vowels-title{ color:var(--varn); }
+  .varnamala .cons-title{ color:var(--varn2); }
+  .shapes .shapes-title{ color:var(--shape); }
+  .shapes .colors-title{ color:var(--pink); }
+
+  .grid{ display:grid; gap:0.625rem; grid-template-columns:repeat(auto-fill,minmax(4.875rem,1fr)); }
+  .grid.wide{ grid-template-columns:repeat(auto-fill,minmax(9.375rem,1fr)); }
+  .grid.big{ grid-template-columns:repeat(auto-fill,minmax(7.5rem,1fr)); }
+
+  .card{
+    background:#fff; border-radius:1rem; border:2px solid #eee; padding:0.5rem 0.25rem 0.625rem;
+    text-align:center; cursor:pointer; user-select:none; position:relative;
+    transition:transform .12s ease, box-shadow .12s ease;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:5.5rem;
+  }
+  .card:active{ transform:scale(.93); }
+  .card.speaking{ animation:bounce .5s ease infinite alternate; }
+  @keyframes bounce{ from{ transform:scale(1); } to{ transform:scale(1.08); } }
+  .card .glow{ position:absolute; inset:-4px; border-radius:1.25rem; pointer-events:none; opacity:0; }
+  .card.speaking .glow{
+    opacity:1; box-shadow:0 0 0 4px currentColor, 0 0 22px 6px currentColor;
+    animation:glowpulse 1s ease-in-out infinite;
+  }
+  @keyframes glowpulse{ 0%,100%{ opacity:.35; } 50%{ opacity:.85; } }
+  .card .spark{ position:absolute; font-size:1rem; opacity:0; pointer-events:none; }
+  .card.speaking .spark{ animation:spark-fly 0.9s ease-out infinite; }
+  @keyframes spark-fly{
+    0%{ opacity:1; transform:translate(0,0) scale(.6) rotate(0deg); }
+    100%{ opacity:0; transform:translate(var(--dx),var(--dy)) scale(1.3) rotate(180deg); }
+  }
+
+  .num-cell{ color:var(--num); border-color:#cdeccf; }
+  .num-cell .numeral{ font-size:1.375rem; font-weight:800; color:var(--ink); }
+  .num-cell .cap-en{ font-size:0.6875rem; font-weight:700; color:var(--muted); margin-top:0.125rem;}
+  .num-cell .cap-hi{ font-size:0.75rem; font-weight:800; color:var(--num); }
+
+  .alpha-cell{ color:var(--alpha); border-color:#cdeeff; min-height:7.375rem; }
+  .alpha-cell .emoji{ font-size:2rem; }
+  .alpha-cell .letters{ font-size:1.375rem; font-weight:800; color:var(--alpha); margin-top:0.125rem;}
+  .alpha-cell .word-en{ font-size:0.75rem; font-weight:700; color:var(--muted); }
+  .alpha-cell .word-hi{ font-size:0.75rem; font-weight:800; color:var(--alpha); }
+
+  .varn-cell{ min-height:6rem; }
+  .varn-cell.vowel{ color:var(--varn); border-color:#ffe4bd; }
+  .varn-cell.cons{ color:var(--varn2); border-color:#ffd7c2; }
+  .varn-cell .akshar{ font-size:2rem; font-weight:800; color:var(--ink); }
+  .varn-cell .roman{ font-size:0.6875rem; font-weight:700; color:var(--muted); margin-top:0.1875rem; }
+
+  .shape-cell{ color:var(--shape); border-color:#f1defa; min-height:7.5rem; }
+  .shape-cell.color-cell{ color:var(--pink); border-color:#ffd6e6; }
+  .shape-cell .shape-icon{ width:3rem; height:3rem; display:flex; align-items:center; justify-content:center; }
+  .shape-cell .shape-icon svg{ width:100%; height:100%; }
+  .shape-cell .swatch{ width:2.75rem; height:2.75rem; border-radius:50%; box-shadow:inset 0 -4px 6px rgba(0,0,0,.12); }
+  .shape-cell .name-en{ font-size:0.8125rem; font-weight:800; color:var(--ink); margin-top:0.25rem;}
+  .shape-cell .name-hi{ font-size:0.75rem; font-weight:700; }
+
+  /* ---------- SINGLE / FLASHCARD VIEW ---------- */
+  .single-wrap{ display:none; padding:0.625rem 0 1.125rem; }
+  .single-nav-row{
+    display:flex; align-items:center; justify-content:center; gap:0.625rem;
+    max-width:32.5rem; margin:0 auto;
+  }
+  .nav-btn{
+    flex:0 0 auto; width:3.25rem; height:3.25rem; border-radius:50%; border:none;
+    background:#fff; box-shadow:0 4px 0 rgba(0,0,0,.1); font-size:1.375rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; color:var(--ink);
+    transition:transform .12s ease;
+  }
+  .nav-btn:active{ transform:scale(.88); }
+  .nav-btn:disabled{ opacity:.3; cursor:default; }
+
+  .single-shell{
+    flex:1 1 auto; max-width:21.25rem; min-height:17.5rem; border-radius:2rem; padding:1.625rem 1.125rem 1.375rem;
+    text-align:center; position:relative; cursor:pointer; user-select:none;
+    box-shadow:0 10px 0 rgba(0,0,0,.08);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.375rem;
+    transition:transform .12s ease;
+  }
+  .single-shell:active{ transform:scale(.97); }
+  .single-shell.pulse{ animation:shellpulse 0.6s ease infinite alternate; }
+  @keyframes shellpulse{ from{ box-shadow:0 10px 0 rgba(0,0,0,.08); } to{ box-shadow:0 10px 0 rgba(0,0,0,.08), 0 0 0 8px rgba(255,255,255,.55); } }
+
+  .single-shell.theme-numbers{ background:linear-gradient(160deg,var(--num-grad1),var(--num-grad2)); }
+  .single-shell.theme-alphabet{ background:linear-gradient(160deg,var(--alpha-grad1),var(--alpha-grad2)); }
+  .single-shell.theme-varn-vowel{ background:linear-gradient(160deg,#FFF3D6,var(--varn-grad2)); }
+  .single-shell.theme-varn-cons{ background:linear-gradient(160deg,#FFDDC7,#FF8A65); }
+  .single-shell.theme-shape{ background:linear-gradient(160deg,var(--shape-grad1),var(--shape-grad2)); }
+  .single-shell.theme-color{ background:linear-gradient(160deg,#FFE1EC,#F06292); }
+
+  .single-group-label{
+    background:rgba(255,255,255,.55); color:var(--ink); font-weight:800; font-size:0.75rem;
+    padding:0.25rem 0.875rem; border-radius:999px; margin-bottom:0.25rem;
+  }
+  .single-emoji{ font-size:3.5rem; line-height:1; }
+  .single-emoji svg{ width:3.75rem; height:3.75rem; }
+  .single-main{ font-size:4rem; font-weight:800; color:#fff; text-shadow:0 3px 0 rgba(0,0,0,.12); line-height:1; }
+  .single-sub-en{ font-size:1.5rem; font-weight:800; color:#fff; text-shadow:0 2px 0 rgba(0,0,0,.1); }
+  .single-sub-hi{ font-size:1.625rem; font-weight:800; color:#3b2b00; background:rgba(255,255,255,.6); padding:0.125rem 0.875rem; border-radius:0.875rem; }
+  .single-swatch{ width:4.375rem; height:4.375rem; border-radius:50%; box-shadow:inset 0 -6px 10px rgba(0,0,0,.15), 0 4px 0 rgba(0,0,0,.1); }
+  .single-replay{
+    margin-top:0.5rem; border:none; background:rgba(255,255,255,.75); border-radius:999px;
+    font-weight:800; font-size:0.8125rem; padding:0.5rem 1rem; cursor:pointer; color:var(--ink);
+    display:flex; align-items:center; gap:0.375rem;
+  }
+  .single-replay:active{ transform:scale(.93); }
+  .single-progress{ text-align:center; margin-top:0.875rem; font-weight:800; color:var(--muted); font-size:0.875rem; }
+  .single-progress .bar{
+    width:13.75rem; height:0.5rem; background:#eee; border-radius:99px; margin:0.375rem auto 0; overflow:hidden;
+  }
+  .single-progress .bar-fill{ height:100%; background:var(--ink); border-radius:99px; transition:width .2s ease; }
+
+  footer{ text-align:center; color:var(--muted); font-weight:700; font-size:0.8125rem; margin-top:1.625rem; }
+
+  /* ---------- Small phone tweak ---------- */
+  @media (max-width:380px){
+    .grid{ grid-template-columns:repeat(auto-fill,minmax(4.25rem,1fr)); }
+  }
+  /* ---------- Large / TV screen: give the page room to breathe ---------- */
+  @media (min-width:1400px){
+    main{ max-width:75rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌟 Little Stars Learning 🌟</h1>
+  <p>बच्चों की पाठशाला — जिस पर उंगली रखो, वो बोल पड़े!</p>
+  <div class="hint"><span class="dot"></span> Tap karke sunoo — dheeme aur saaf awaaz mein!</div>
+</header>
+
+<nav class="tabs">
+  <button data-tab="numbers" class="active">🔢 Ginti</button>
+  <button data-tab="alphabet">🔤 Alphabet</button>
+  <button data-tab="varnamala">📝 Varnamala</button>
+  <button data-tab="shapes">🎨 Shapes &amp; Colors</button>
+</nav>
+
+<div class="toolbar">
+  <div class="segmented" id="mode-toggle">
+    <span class="seg-label">View:</span>
+    <button data-mode="grid" class="active">🔳 Sabhi</button>
+    <button data-mode="single">🎠 Ek-Ek</button>
+  </div>
+  <div class="segmented" id="screen-toggle">
+    <span class="seg-label">Screen:</span>
+    <button data-screen="mobile">📱 Mobile</button>
+    <button data-screen="pc">💻 PC</button>
+    <button data-screen="tv">📺 TV</button>
+  </div>
+</div>
+
+<main>
+
+  <section class="panel numbers active" id="panel-numbers">
+    <div class="section-title">Ginti Chart · 1 se 100 tak</div>
+    <div class="grid-wrap">
+      <div class="grid" id="grid-numbers"></div>
+    </div>
+    <div class="single-wrap" id="single-numbers-wrap">
+      <div class="single-nav-row">
+        <button class="nav-btn" data-prev="numbers">◀</button>
+        <div class="single-shell" id="single-numbers"></div>
+        <button class="nav-btn" data-next="numbers">▶</button>
+      </div>
+      <div class="single-progress" id="progress-numbers"></div>
+    </div>
+  </section>
+
+  <section class="panel alphabet" id="panel-alphabet">
+    <div class="section-title">English Alphabet · A se Z tak</div>
+    <div class="grid-wrap">
+      <div class="grid wide" id="grid-alphabet"></div>
+    </div>
+    <div class="single-wrap" id="single-alphabet-wrap">
+      <div class="single-nav-row">
+        <button class="nav-btn" data-prev="alphabet">◀</button>
+        <div class="single-shell" id="single-alphabet"></div>
+        <button class="nav-btn" data-next="alphabet">▶</button>
+      </div>
+      <div class="single-progress" id="progress-alphabet"></div>
+    </div>
+  </section>
+
+  <section class="panel varnamala" id="panel-varnamala">
+    <div class="grid-wrap">
+      <div class="section-title vowels-title">स्वर (Vowels)</div>
+      <div class="grid big" id="grid-vowels"></div>
+      <div class="section-title cons-title">व्यंजन (Consonants)</div>
+      <div class="grid big" id="grid-consonants"></div>
+    </div>
+    <div class="single-wrap" id="single-varnamala-wrap">
+      <div class="single-nav-row">
+        <button class="nav-btn" data-prev="varnamala">◀</button>
+        <div class="single-shell" id="single-varnamala"></div>
+        <button class="nav-btn" data-next="varnamala">▶</button>
+      </div>
+      <div class="single-progress" id="progress-varnamala"></div>
+    </div>
+  </section>
+
+  <section class="panel shapes" id="panel-shapes">
+    <div class="grid-wrap">
+      <div class="section-title shapes-title">आकार (Shapes)</div>
+      <div class="grid big" id="grid-shapes"></div>
+      <div class="section-title colors-title">रंग (Colors)</div>
+      <div class="grid big" id="grid-colors"></div>
+    </div>
+    <div class="single-wrap" id="single-shapes-wrap">
+      <div class="single-nav-row">
+        <button class="nav-btn" data-prev="shapes">◀</button>
+        <div class="single-shell" id="single-shapes"></div>
+        <button class="nav-btn" data-next="shapes">▶</button>
+      </div>
+      <div class="single-progress" id="progress-shapes"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>Little Stars Learning — बच्चों की पाठशाला</footer>
+
+<script>
+/* ================= SPEECH ENGINE ================= */
+let voices = [];
+function loadVoices(){ voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : []; }
+if ('speechSynthesis' in window){
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+function pickVoice(lang){
+  if(!voices.length) return null;
+  let exact = voices.find(v => v.lang && v.lang.toLowerCase() === lang.toLowerCase());
+  if(exact) return exact;
+  let starts = voices.find(v => v.lang && v.lang.toLowerCase().startsWith(lang.slice(0,2)));
+  return starts || null;
+}
+const EN_RATE = 0.62, EN_PITCH = 1.1;
+const HI_RATE = 0.72, HI_PITCH = 1.1;
+function speakOne(text, lang, rate, pitch){
+  return new Promise((resolve) => {
+    if(!('speechSynthesis' in window)){ resolve(); return; }
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang;
+    const v = pickVoice(lang);
+    if(v) u.voice = v;
+    u.rate = rate;
+    u.pitch = pitch;
+    u.onend = resolve;
+    u.onerror = resolve;
+    window.speechSynthesis.speak(u);
+  });
+}
+function pause(ms){ return new Promise(r => setTimeout(r, ms)); }
+async function speakSequence(items){
+  if('speechSynthesis' in window) window.speechSynthesis.cancel();
+  for(let i=0;i<items.length;i++){
+    const item = items[i];
+    await speakOne(item.text, item.lang, item.rate, item.pitch);
+    if(i < items.length-1) await pause(380);
+  }
+}
+function enItem(text){ return {text, lang:'en-IN', rate:EN_RATE, pitch:EN_PITCH}; }
+function hiItem(text){ return {text, lang:'hi-IN', rate:HI_RATE, pitch:HI_PITCH}; }
+
+/* visual feedback while a grid card speaks */
+function animateCard(card, colorHex){
+  document.querySelectorAll('.card.speaking').forEach(c => c.classList.remove('speaking'));
+  card.classList.add('speaking');
+  card.style.color = colorHex;
+  spawnSparks(card);
+  clearTimeout(card._t);
+  card._t = setTimeout(() => card.classList.remove('speaking'), 2600);
+}
+const sparkEmojis = ['✨','⭐','💫'];
+function spawnSparks(card){
+  card.querySelectorAll('.spark').forEach(o => o.remove());
+  for(let i=0;i<4;i++){
+    const s = document.createElement('span');
+    s.className = 'spark';
+    s.textContent = sparkEmojis[i % sparkEmojis.length];
+    const angle = Math.random()*Math.PI*2;
+    const dist = 30 + Math.random()*20;
+    s.style.setProperty('--dx', (Math.cos(angle)*dist)+'px');
+    s.style.setProperty('--dy', (Math.sin(angle)*dist)+'px');
+    s.style.left = (40 + Math.random()*20 - 10) + '%';
+    s.style.top = (40 + Math.random()*20 - 10) + '%';
+    s.style.animationDelay = (i*0.08)+'s';
+    card.appendChild(s);
+  }
+}
+function makeCard(className, colorHex, innerHTML, onTap){
+  const card = document.createElement('div');
+  card.className = 'card ' + className;
+  card.innerHTML = '<div class="glow"></div>' + innerHTML;
+  card.addEventListener('click', () => { animateCard(card, colorHex); onTap(); });
+  return card;
+}
+
+/* ================= DATA ================= */
+const onesEN = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten',
+  'Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+const tensEN = ['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+function numberToEnglish(n){
+  if(n === 100) return 'One Hundred';
+  if(n < 20) return onesEN[n];
+  const t = Math.floor(n/10), o = n%10;
+  return tensEN[t] + (o ? ' ' + onesEN[o] : '');
+}
+const numberHindi = ['','एक','दो','तीन','चार','पांच','छह','सात','आठ','नौ','दस',
+'ग्यारह','बारह','तेरह','चौदह','पंद्रह','सोलह','सत्रह','अठारह','उन्नीस','बीस',
+'इक्कीस','बाईस','तेईस','चौबीस','पच्चीस','छब्बीस','सत्ताईस','अट्ठाईस','उनतीस','तीस',
+'इकतीस','बत्तीस','तैंतीस','चौंतीस','पैंतीस','छत्तीस','सैंतीस','अड़तीस','उनतालीस','चालीस',
+'इकतालीस','बयालीस','तैंतालीस','चौंतालीस','पैंतालीस','छियालीस','सैंतालीस','अड़तालीस','उनचास','पचास',
+'इक्यावन','बावन','तिरपन','चौवन','पचपन','छप्पन','सत्तावन','अट्ठावन','उनसठ','साठ',
+'इकसठ','बासठ','तिरसठ','चौंसठ','पैंसठ','छियासठ','सड़सठ','अड़सठ','उनहत्तर','सत्तर',
+'इकहत्तर','बहत्तर','तिहत्तर','चौहत्तर','पचहत्तर','छिहत्तर','सतहत्तर','अठहत्तर','उनासी','अस्सी',
+'इक्यासी','बयासी','तिरासी','चौरासी','पचासी','छियासी','सत्तासी','अठासी','नवासी','नब्बे',
+'इक्यानवे','बानवे','तिरानवे','चौरानवे','पंचानवे','छियानवे','सत्तानवे','अट्ठानवे','निन्यानवे','सौ'];
+const numbersData = [];
+for(let n=1;n<=100;n++){ numbersData.push({n, en:numberToEnglish(n), hi:numberHindi[n]}); }
+
+const alphabetData = [
+ ['A','Aa','🍎','Apple','सेब'],['B','Bb','⚽','Ball','गेंद'],['C','Cc','🐱','Cat','बिल्ली'],
+ ['D','Dd','🐶','Dog','कुत्ता'],['E','Ee','🥚','Egg','अंडा'],['F','Ff','🐟','Fish','मछली'],
+ ['G','Gg','🐐','Goat','बकरी'],['H','Hh','🎩','Hat','टोपी'],['I','Ii','🍦','Ice-cream','आइसक्रीम'],
+ ['J','Jj','🫙','Jug','जग'],['K','Kk','🪁','Kite','पतंग'],['L','Ll','🦁','Lion','शेर'],
+ ['M','Mm','🥭','Mango','आम'],['N','Nn','🪺','Nest','घोंसला'],['O','Oo','🍊','Orange','संतरा'],
+ ['P','Pp','🦜','Parrot','तोता'],['Q','Qq','👸','Queen','रानी'],['R','Rr','🐰','Rabbit','खरगोश'],
+ ['S','Ss','☀️','Sun','सूरज'],['T','Tt','🐯','Tiger','बाघ'],['U','Uu','☂️','Umbrella','छाता'],
+ ['V','Vv','🚐','Van','वैन'],['W','Ww','⌚','Watch','घड़ी'],['X','Xx','🎼','Xylophone','जाइलोफोन'],
+ ['Y','Yy','🐂','Yak','याक'],['Z','Zz','🦓','Zebra','ज़ेबरा'],
+];
+
+const vowels = [
+ ['अ','a'],['आ','aa'],['इ','i'],['ई','ee'],['उ','u'],['ऊ','oo'],['ऋ','ri'],
+ ['ए','e'],['ऐ','ai'],['ओ','o'],['औ','au'],['अं','am'],['अः','ah']
+];
+const consonants = [
+ ['क','ka'],['ख','kha'],['ग','ga'],['घ','gha'],['ङ','nga'],['च','cha'],['छ','chha'],
+ ['ज','ja'],['झ','jha'],['ञ','nya'],['ट','ta'],['ठ','tha'],['ड','da'],['ढ','dha'],
+ ['ण','na'],['त','ta'],['थ','tha'],['द','da'],['ध','dha'],['न','na'],['प','pa'],
+ ['फ','pha'],['ब','ba'],['भ','bha'],['म','ma'],['य','ya'],['र','ra'],['ल','la'],
+ ['व','va'],['श','sha'],['ष','sha'],['स','sa'],['ह','ha'],['क्ष','ksha'],['त्र','tra'],['ज्ञ','gya']
+];
+const varnamalaData = [
+  ...vowels.map(([ak,roman]) => ({ak, roman, group:'vowel', groupLabel:'स्वर (Vowel)'})),
+  ...consonants.map(([ak,roman]) => ({ak, roman, group:'cons', groupLabel:'व्यंजन (Consonant)'})),
+];
+
+const shapesData = [
+ {nameEn:'Circle', nameHi:'गोल', svg:`<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="26" fill="#FF6F91"/></svg>`},
+ {nameEn:'Square', nameHi:'चौकोर', svg:`<svg viewBox="0 0 60 60"><rect x="6" y="6" width="48" height="48" fill="#4FC3F7"/></svg>`},
+ {nameEn:'Triangle', nameHi:'तिकोन', svg:`<svg viewBox="0 0 60 60"><polygon points="30,6 55,54 5,54" fill="#FFB74D"/></svg>`},
+ {nameEn:'Rectangle', nameHi:'आयत', svg:`<svg viewBox="0 0 60 60"><rect x="3" y="18" width="54" height="26" fill="#81C784"/></svg>`},
+];
+const colorsData = [
+ {nameEn:'Red', nameHi:'लाल', hex:'#FF6F91'},
+ {nameEn:'Yellow', nameHi:'पीला', hex:'#FFD54F'},
+ {nameEn:'Blue', nameHi:'नीला', hex:'#4FC3F7'},
+ {nameEn:'Green', nameHi:'हरा', hex:'#81C784'},
+ {nameEn:'Orange', nameHi:'नारंगी', hex:'#FFB74D'},
+ {nameEn:'Purple', nameHi:'बैंगनी', hex:'#BA68C8'},
+];
+const shapesColorsData = [
+  ...shapesData.map(s => ({...s, group:'shape', groupLabel:'आकार (Shape)'})),
+  ...colorsData.map(c => ({...c, group:'color', groupLabel:'रंग (Color)'})),
+];
+
+/* ================= GRID RENDER ================= */
+const gridNumbers = document.getElementById('grid-numbers');
+numbersData.forEach(({n,en,hi}) => {
+  const card = makeCard('num-cell', 'var(--num)',
+    `<div class="numeral">${n}</div><div class="cap-en">${en}</div><div class="cap-hi">${hi}</div>`,
+    () => speakSequence([enItem(en), hiItem(hi)])
+  );
+  gridNumbers.appendChild(card);
+});
+
+const gridAlphabet = document.getElementById('grid-alphabet');
+alphabetData.forEach(([letter, letters, emoji, wordEn, wordHi]) => {
+  const card = makeCard('alpha-cell', 'var(--alpha)',
+    `<div class="emoji">${emoji}</div><div class="letters">${letters}</div><div class="word-en">${wordEn}</div><div class="word-hi">${wordHi}</div>`,
+    () => speakSequence([enItem(`${letter}. ${wordEn}`), hiItem(wordHi)])
+  );
+  gridAlphabet.appendChild(card);
+});
+
+const gridVowels = document.getElementById('grid-vowels');
+vowels.forEach(([ak, roman]) => {
+  const card = makeCard('varn-cell vowel', 'var(--varn)',
+    `<div class="akshar">${ak}</div><div class="roman">${roman}</div>`,
+    () => speakSequence([hiItem(ak)])
+  );
+  gridVowels.appendChild(card);
+});
+const gridConsonants = document.getElementById('grid-consonants');
+consonants.forEach(([ak, roman]) => {
+  const card = makeCard('varn-cell cons', 'var(--varn2)',
+    `<div class="akshar">${ak}</div><div class="roman">${roman}</div>`,
+    () => speakSequence([hiItem(ak)])
+  );
+  gridConsonants.appendChild(card);
+});
+
+const gridShapes = document.getElementById('grid-shapes');
+shapesData.forEach(s => {
+  const card = makeCard('shape-cell', 'var(--shape)',
+    `<div class="shape-icon">${s.svg}</div><div class="name-en">${s.nameEn}</div><div class="name-hi">${s.nameHi}</div>`,
+    () => speakSequence([enItem(s.nameEn), hiItem(s.nameHi)])
+  );
+  gridShapes.appendChild(card);
+});
+const gridColors = document.getElementById('grid-colors');
+colorsData.forEach(c => {
+  const card = makeCard('shape-cell color-cell', c.hex,
+    `<div class="swatch" style="background:${c.hex}"></div><div class="name-en">${c.nameEn}</div><div class="name-hi" style="color:${c.hex}">${c.nameHi}</div>`,
+    () => speakSequence([enItem(c.nameEn), hiItem(c.nameHi)])
+  );
+  gridColors.appendChild(card);
+});
+
+/* ================= SINGLE / FLASHCARD VIEW ================= */
+const singleState = {
+  numbers:   { data: numbersData,       index: 0 },
+  alphabet:  { data: alphabetData,      index: 0 },
+  varnamala: { data: varnamalaData,     index: 0 },
+  shapes:    { data: shapesColorsData,  index: 0 },
+};
+
+function renderSingle(tab, autoSpeak){
+  const state = singleState[tab];
+  const item = state.data[state.index];
+  const shell = document.getElementById('single-' + tab);
+  const progress = document.getElementById('progress-' + tab);
+  let html = '', theme = '', speakItems = [];
+
+  if(tab === 'numbers'){
+    theme = 'theme-numbers';
+    html = `<div class="single-main">${item.n}</div>
+            <div class="single-sub-en">${item.en}</div>
+            <div class="single-sub-hi">${item.hi}</div>`;
+    speakItems = [enItem(item.en), hiItem(item.hi)];
+  } else if(tab === 'alphabet'){
+    theme = 'theme-alphabet';
+    const [letter, letters, emoji, wordEn, wordHi] = item;
+    html = `<div class="single-emoji">${emoji}</div>
+            <div class="single-main" style="font-size:3.25rem;">${letters}</div>
+            <div class="single-sub-en">${wordEn}</div>
+            <div class="single-sub-hi">${wordHi}</div>`;
+    speakItems = [enItem(`${letter}. ${wordEn}`), hiItem(wordHi)];
+  } else if(tab === 'varnamala'){
+    theme = item.group === 'vowel' ? 'theme-varn-vowel' : 'theme-varn-cons';
+    html = `<div class="single-group-label">${item.groupLabel}</div>
+            <div class="single-main" style="font-size:5rem;">${item.ak}</div>
+            <div class="single-sub-en" style="color:#3b2b00;text-shadow:none;">${item.roman}</div>`;
+    speakItems = [hiItem(item.ak)];
+  } else if(tab === 'shapes'){
+    if(item.group === 'shape'){
+      theme = 'theme-shape';
+      html = `<div class="single-group-label">${item.groupLabel}</div>
+              <div class="single-emoji">${item.svg}</div>
+              <div class="single-sub-en">${item.nameEn}</div>
+              <div class="single-sub-hi">${item.nameHi}</div>`;
+      speakItems = [enItem(item.nameEn), hiItem(item.nameHi)];
+    } else {
+      theme = 'theme-color';
+      html = `<div class="single-group-label">${item.groupLabel}</div>
+              <div class="single-swatch" style="background:${item.hex}"></div>
+              <div class="single-sub-en">${item.nameEn}</div>
+              <div class="single-sub-hi">${item.nameHi}</div>`;
+      speakItems = [enItem(item.nameEn), hiItem(item.nameHi)];
+    }
+  }
+
+  shell.className = 'single-shell ' + theme;
+  shell.innerHTML = html + `<button class="single-replay">🔊 Dobara Suno</button>`;
+  shell.onclick = () => { doSpeak(); };
+  shell.querySelector('.single-replay').onclick = (e) => { e.stopPropagation(); doSpeak(); };
+
+  function doSpeak(){
+    shell.classList.add('pulse');
+    speakSequence(speakItems).then(() => shell.classList.remove('pulse'));
+  }
+
+  const pct = Math.round(((state.index+1) / state.data.length) * 100);
+  progress.innerHTML = `${state.index+1} / ${state.data.length}
+    <div class="bar"><div class="bar-fill" style="width:${pct}%"></div></div>`;
+
+  document.querySelector(`[data-prev="${tab}"]`).disabled = state.index === 0;
+  document.querySelector(`[data-next="${tab}"]`).disabled = state.index === state.data.length - 1;
+
+  if(autoSpeak) doSpeak();
+}
+
+document.querySelectorAll('[data-prev]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.prev;
+    const state = singleState[tab];
+    if(state.index > 0){ state.index--; renderSingle(tab, true); }
+  });
+});
+document.querySelectorAll('[data-next]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.next;
+    const state = singleState[tab];
+    if(state.index < state.data.length - 1){ state.index++; renderSingle(tab, true); }
+  });
+});
+
+/* keyboard arrows for whichever tab/mode is visible */
+document.addEventListener('keydown', (e) => {
+  if(viewMode !== 'single') return;
+  const tab = currentTab;
+  if(e.key === 'ArrowRight') document.querySelector(`[data-next="${tab}"]`).click();
+  if(e.key === 'ArrowLeft') document.querySelector(`[data-prev="${tab}"]`).click();
+});
+
+/* swipe support */
+['numbers','alphabet','varnamala','shapes'].forEach(tab => {
+  const shell = document.getElementById('single-' + tab);
+  let startX = null;
+  shell.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, {passive:true});
+  shell.addEventListener('touchend', (e) => {
+    if(startX === null) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    if(Math.abs(dx) > 45){
+      const btn = dx < 0 ? document.querySelector(`[data-next="${tab}"]`) : document.querySelector(`[data-prev="${tab}"]`);
+      if(btn && !btn.disabled) btn.click();
+    }
+    startX = null;
+  });
+});
+
+/* render all single views once at start (not auto-speaking) */
+Object.keys(singleState).forEach(tab => renderSingle(tab, false));
+
+/* ================= TAB + MODE + SCREEN SWITCHING ================= */
+let currentTab = 'numbers';
+let viewMode = 'grid';
+
+document.querySelectorAll('nav.tabs button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    currentTab = btn.dataset.tab;
+    document.getElementById('panel-' + currentTab).classList.add('active');
+    if('speechSynthesis' in window) window.speechSynthesis.cancel();
+  });
+});
+
+document.getElementById('mode-toggle').querySelectorAll('button[data-mode]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById('mode-toggle').querySelectorAll('button[data-mode]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    viewMode = btn.dataset.mode;
+    document.querySelectorAll('.grid-wrap').forEach(el => el.style.display = viewMode === 'grid' ? '' : 'none');
+    document.querySelectorAll('.single-wrap').forEach(el => el.style.display = viewMode === 'single' ? 'block' : 'none');
+    if('speechSynthesis' in window) window.speechSynthesis.cancel();
+  });
+});
+
+/* Screen size mode: Mobile / PC / TV — scales the whole UI via root font-size */
+function setScreenMode(mode){
+  document.documentElement.classList.remove('view-mobile','view-pc','view-tv');
+  document.documentElement.classList.add('view-' + mode);
+  document.getElementById('screen-toggle').querySelectorAll('button[data-screen]').forEach(b => {
+    b.classList.toggle('active', b.dataset.screen === mode);
+  });
+}
+document.getElementById('screen-toggle').querySelectorAll('button[data-screen]').forEach(btn => {
+  btn.addEventListener('click', () => setScreenMode(btn.dataset.screen));
+});
+/* pick a sensible starting mode automatically; user can always override above */
+setScreenMode(window.innerWidth < 700 ? 'mobile' : (window.innerWidth > 1400 ? 'pc' : 'pc'));
+</script>
+</body>
+</html>
