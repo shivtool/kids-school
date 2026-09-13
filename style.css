@@ -164,6 +164,26 @@ button{ font-family:inherit; cursor:pointer; }
 .lk{ background: linear-gradient(150deg,#FFB74D,#FF8A5C); }
 .uk{ background: linear-gradient(150deg,#81C784,#4FBFA4); }
 
+/* ---------- printable charts (home page) ---------- */
+.chart-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap:16px;
+}
+.chart-card{
+  background:#fff;
+  border-radius:22px;
+  padding:18px;
+  box-shadow: var(--shadow);
+  border: 2px solid transparent;
+  display:flex; flex-direction:column; gap:6px;
+  transition: transform .15s ease, border-color .15s ease;
+}
+.chart-card:hover{ transform: translateY(-4px); border-color:#BA68C8; }
+.chart-card .chart-emoji{ font-size:2.2rem; }
+.chart-card h3{ font-size:1.02rem; font-weight:800; }
+.chart-card p{ margin:0; color: var(--ink-soft); font-size:.88rem; font-weight:600; }
+
 /* ---------- LEVEL PAGES ---------- */
 .level-hero{
   border-radius: 30px;
@@ -293,31 +313,65 @@ button{ font-family:inherit; cursor:pointer; }
 }
 
 .topic-card{
+  position:relative;
   background:#fff;
-  border-radius:22px;
-  padding:18px 18px 16px;
+  border-radius:24px;
+  padding:20px 20px 18px;
   box-shadow: var(--shadow);
   border: 2px solid transparent;
-  display:flex; flex-direction:column; gap:8px;
-  transition: transform .15s ease, border-color .15s ease;
+  display:flex; flex-direction:column; gap:9px;
+  overflow:hidden;
+  transition: transform .18s ease, box-shadow .18s ease;
 }
-.topic-card:hover{ transform: translateY(-4px); }
+.topic-card::before{
+  content:"";
+  position:absolute;
+  top:0; left:0; right:0;
+  height:6px;
+  background: var(--card-accent, linear-gradient(90deg,#FF6F91,#FFB74D));
+}
+.topic-card::after{
+  content:"";
+  position:absolute;
+  top:-30px; right:-30px;
+  width:90px; height:90px;
+  border-radius:50%;
+  background: var(--card-accent-soft, rgba(255,111,145,.12));
+  z-index:0;
+}
+.topic-card:hover{
+  transform: translateY(-6px) rotate(-0.6deg);
+  box-shadow: 0 16px 28px rgba(46,42,61,0.16);
+}
 .topic-card .emoji{
-  font-size:2rem;
-  width:52px; height:52px;
-  border-radius:16px;
+  position:relative;
+  z-index:1;
+  font-size:2.1rem;
+  width:58px; height:58px;
+  border-radius:18px;
   display:flex; align-items:center; justify-content:center;
+  background: var(--card-accent, linear-gradient(145deg,#FF6F91,#FFB74D)) !important;
+  box-shadow: 0 8px 16px rgba(46,42,61,0.18);
 }
 .topic-card h3{
-  font-size:1.05rem;
+  position:relative; z-index:1;
+  font-size:1.08rem;
   font-weight:800;
 }
 .topic-card p{
+  position:relative; z-index:1;
   margin:0;
   color: var(--ink-soft);
   font-size:.92rem;
   font-weight:600;
 }
+/* rotating rang-birangi palette — cycles regardless of level color */
+.topic-card:nth-child(6n+1){ --card-accent: linear-gradient(145deg,#FF6F91,#FF9F68); --card-accent-soft: rgba(255,111,145,.14); }
+.topic-card:nth-child(6n+2){ --card-accent: linear-gradient(145deg,#4FC3F7,#4FA0F7); --card-accent-soft: rgba(79,195,247,.14); }
+.topic-card:nth-child(6n+3){ --card-accent: linear-gradient(145deg,#FFB74D,#FF8A5C); --card-accent-soft: rgba(255,183,77,.16); }
+.topic-card:nth-child(6n+4){ --card-accent: linear-gradient(145deg,#81C784,#4FBFA4); --card-accent-soft: rgba(129,199,132,.16); }
+.topic-card:nth-child(6n+5){ --card-accent: linear-gradient(145deg,#BA68C8,#9575CD); --card-accent-soft: rgba(186,104,200,.14); }
+.topic-card:nth-child(6n+0){ --card-accent: linear-gradient(145deg,#FFD54F,#FFB74D); --card-accent-soft: rgba(255,213,79,.18); }
 
 /* ---------- interactive exercise cards ---------- */
 #exerciseList{

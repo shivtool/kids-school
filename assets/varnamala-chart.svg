@@ -1,0 +1,155 @@
+<svg viewBox="0 0 900 1075" xmlns="http://www.w3.org/2000/svg" font-family="Nunito, Arial, sans-serif">
+  <rect x="0" y="0" width="900" height="1075" fill="#FFFDF6"/>
+  <rect x="18" y="18" width="864" height="1039" rx="28" fill="none" stroke="#FFB74D" stroke-width="6"/>
+  <text x="450.0" y="90" text-anchor="middle" font-size="46" font-weight="800" fill="#2E2A3D">Hindi Varnamala Chart</text>
+  <text x="450.0" y="128" text-anchor="middle" font-size="22" font-weight="700" fill="#6b6680">स्वर और व्यंजन — पूरी वर्णमाला</text>
+  <text x="450" y="145" text-anchor="middle" font-size="26" font-weight="800" fill="#FFB74D">स्वर (Vowels)</text>
+          <rect x="106.0" y="166" width="88" height="88" rx="14" fill="#ffffff" stroke="#FFB74D" stroke-width="3"/>
+          <text x="150.0" y="224.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">अ</text>
+        
+          <rect x="206.0" y="166" width="88" height="88" rx="14" fill="#ffffff" stroke="#FFB74D" stroke-width="3"/>
+          <text x="250.0" y="224.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">आ</text>
+        
+          <rect x="306.0" y="166" width="88" height="88" rx="14" fill="#ffffff" stroke="#FFB74D" stroke-width="3"/>
+          <text x="350.0" y="224.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">इ</text>
+        
+          <rect x="406.0" y="166" width="88" height="88" rx="14" fill="#ffffff" stroke="#FFB74D" stroke-width="3"/>
+          <text x="450.0" y="224.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ई</text>
+        
+          <rect x="506.0" y="166" width="88" height="88" rx="14" fill="#ffffff" stroke="#FFB74D" stroke-width="3"/>
+          <text x="550.0" y="224.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">उ</text>
+        
+          <rect x="606.0" y="166" width="88" height="88" rx="14" fill="#ffffff" stroke="#FFB74D" stroke-width="3"/>
+          <text x="650.0" y="224.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ऊ</text>
+        
+          <rect x="706.0" y="166" width="88" height="88" rx="14" fill="#ffffff" stroke="#FFB74D" stroke-width="3"/>
+          <text x="750.0" y="224.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ऋ</text>
+        
+          <rect x="106.0" y="266" width="88" height="88" rx="14" fill="#ffffff" stroke="#FFB74D" stroke-width="3"/>
+          <text x="150.0" y="324.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ए</text>
+        
+          <rect x="206.0" y="266" width="88" height="88" rx="14" fill="#ffffff" stroke="#FFB74D" stroke-width="3"/>
+          <text x="250.0" y="324.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ऐ</text>
+        
+          <rect x="306.0" y="266" width="88" height="88" rx="14" fill="#ffffff" stroke="#FFB74D" stroke-width="3"/>
+          <text x="350.0" y="324.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ओ</text>
+        
+          <rect x="406.0" y="266" width="88" height="88" rx="14" fill="#ffffff" stroke="#FFB74D" stroke-width="3"/>
+          <text x="450.0" y="324.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">औ</text>
+        
+          <rect x="506.0" y="266" width="88" height="88" rx="14" fill="#ffffff" stroke="#FFB74D" stroke-width="3"/>
+          <text x="550.0" y="324.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">अं</text>
+        
+          <rect x="606.0" y="266" width="88" height="88" rx="14" fill="#ffffff" stroke="#FFB74D" stroke-width="3"/>
+          <text x="650.0" y="324.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">अः</text>
+        <text x="450" y="400" text-anchor="middle" font-size="26" font-weight="800" fill="#FF8A5C">व्यंजन (Consonants)</text>
+          <rect x="106.0" y="421" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="150.0" y="479.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">क</text>
+        
+          <rect x="206.0" y="421" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="250.0" y="479.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ख</text>
+        
+          <rect x="306.0" y="421" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="350.0" y="479.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ग</text>
+        
+          <rect x="406.0" y="421" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="450.0" y="479.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">घ</text>
+        
+          <rect x="506.0" y="421" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="550.0" y="479.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ङ</text>
+        
+          <rect x="606.0" y="421" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="650.0" y="479.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">च</text>
+        
+          <rect x="706.0" y="421" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="750.0" y="479.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">छ</text>
+        
+          <rect x="106.0" y="521" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="150.0" y="579.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ज</text>
+        
+          <rect x="206.0" y="521" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="250.0" y="579.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">झ</text>
+        
+          <rect x="306.0" y="521" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="350.0" y="579.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ञ</text>
+        
+          <rect x="406.0" y="521" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="450.0" y="579.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ट</text>
+        
+          <rect x="506.0" y="521" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="550.0" y="579.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ठ</text>
+        
+          <rect x="606.0" y="521" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="650.0" y="579.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ड</text>
+        
+          <rect x="706.0" y="521" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="750.0" y="579.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ढ</text>
+        
+          <rect x="106.0" y="621" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="150.0" y="679.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ण</text>
+        
+          <rect x="206.0" y="621" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="250.0" y="679.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">त</text>
+        
+          <rect x="306.0" y="621" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="350.0" y="679.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">थ</text>
+        
+          <rect x="406.0" y="621" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="450.0" y="679.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">द</text>
+        
+          <rect x="506.0" y="621" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="550.0" y="679.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ध</text>
+        
+          <rect x="606.0" y="621" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="650.0" y="679.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">न</text>
+        
+          <rect x="706.0" y="621" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="750.0" y="679.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">प</text>
+        
+          <rect x="106.0" y="721" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="150.0" y="779.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">फ</text>
+        
+          <rect x="206.0" y="721" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="250.0" y="779.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ब</text>
+        
+          <rect x="306.0" y="721" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="350.0" y="779.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">भ</text>
+        
+          <rect x="406.0" y="721" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="450.0" y="779.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">म</text>
+        
+          <rect x="506.0" y="721" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="550.0" y="779.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">य</text>
+        
+          <rect x="606.0" y="721" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="650.0" y="779.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">र</text>
+        
+          <rect x="706.0" y="721" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="750.0" y="779.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ल</text>
+        
+          <rect x="106.0" y="821" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="150.0" y="879.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">व</text>
+        
+          <rect x="206.0" y="821" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="250.0" y="879.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">श</text>
+        
+          <rect x="306.0" y="821" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="350.0" y="879.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ष</text>
+        
+          <rect x="406.0" y="821" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="450.0" y="879.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">स</text>
+        
+          <rect x="506.0" y="821" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="550.0" y="879.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ह</text>
+        
+          <rect x="606.0" y="821" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="650.0" y="879.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">क्ष</text>
+        
+          <rect x="706.0" y="821" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="750.0" y="879.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">त्र</text>
+        
+          <rect x="106.0" y="921" width="88" height="88" rx="14" fill="#ffffff" stroke="#FF8A5C" stroke-width="3"/>
+          <text x="150.0" y="979.0" text-anchor="middle" font-size="34" font-weight="800" fill="#2E2A3D">ज्ञ</text>
+        
+  <text x="450.0" y="1045" text-anchor="middle" font-size="16" font-weight="700" fill="#6b6680">Little Stars Learning — बच्चों की पाठशाला</text>
+</svg>
