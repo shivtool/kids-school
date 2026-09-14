@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Little Stars Learning — Kavitayein Chart</title>
+<style>
+  :root{
+    --cream:#FFFDF6;
+    --ink:#2E2A3D;
+    --muted:#6b6680;
+    --hindi:#c2185b;   --hindi-grad1:#FFE1EC; --hindi-grad2:#F06292;
+    --english:#1565c0; --english-grad1:#BBDEFB; --english-grad2:#64B5F6;
+  }
+  html{ font-size:16px; }
+  html.view-mobile{ font-size:15px; }
+  html.view-pc{ font-size:17px; }
+  html.view-tv{ font-size:26px; }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    font-family:'Baloo 2','Nunito','Segoe UI',Arial,sans-serif;
+    color:var(--ink);
+    -webkit-tap-highlight-color:transparent;
+    padding-bottom:2.5rem;
+  }
+  header{ text-align:center; padding:1.375rem 1rem 0.625rem; }
+  header h1{ margin:0; font-size:clamp(1.375rem,5vw,2.25rem); font-weight:800; }
+  header p{ margin:0.375rem 0 0; color:var(--muted); font-weight:700; font-size:clamp(0.8125rem,3vw,1rem); }
+  .hint{
+    display:inline-flex; align-items:center; gap:0.5rem;
+    background:#fff; border:2px dashed #d8d3ea; border-radius:999px;
+    padding:0.5rem 1.125rem; margin-top:0.625rem; font-weight:700; font-size:0.875rem; color:var(--ink);
+  }
+  .hint .dot{ width:0.625rem;height:0.625rem;border-radius:50%; background:#FF6F91; animation:pulse 1.4s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.6);opacity:.4;} }
+
+  nav.tabs{
+    display:flex; justify-content:center; flex-wrap:wrap; gap:0.5rem;
+    padding:1rem 0.75rem 0.25rem; position:sticky; top:0; background:var(--cream); z-index:20;
+  }
+  nav.tabs button{
+    border:none; cursor:pointer; font-family:inherit; font-weight:800;
+    font-size:clamp(0.8125rem,2.6vw,1rem); padding:0.625rem 1.125rem; border-radius:1rem;
+    background:#fff; color:var(--muted); box-shadow:0 3px 0 rgba(0,0,0,.06);
+    display:flex;align-items:center;gap:0.375rem;
+  }
+  nav.tabs button.active{ color:#fff; box-shadow:0 4px 0 rgba(0,0,0,.15); }
+  nav.tabs button[data-tab="hindi"].active{ background:var(--hindi-grad2); }
+  nav.tabs button[data-tab="english"].active{ background:var(--english-grad2); }
+
+  .toolbar{ display:flex; justify-content:center; flex-wrap:wrap; gap:0.75rem; margin:0.875rem auto 0.25rem; }
+  .segmented{ display:flex; align-items:center; gap:0.25rem; background:#fff; border-radius:999px; padding:0.25rem; box-shadow:0 2px 0 rgba(0,0,0,.06); }
+  .segmented .seg-label{ font-weight:800; font-size:0.75rem; color:var(--muted); padding:0 0.5rem 0 0.625rem; }
+  .segmented button{ border:none; background:transparent; cursor:pointer; font-family:inherit; font-weight:800; font-size:0.8125rem; padding:0.5rem 1rem; border-radius:999px; color:var(--muted); }
+  .segmented button.active{ background:var(--ink); color:#fff; }
+
+  main{ max-width:68.75rem; margin:0 auto; padding:0.875rem 1rem 0.5rem; }
+  section.panel{ display:none; }
+  section.panel.active{ display:block; animation:fadein .25s ease; }
+  @keyframes fadein{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .section-title{ text-align:center; font-weight:800; font-size:clamp(1.125rem,3.6vw,1.5rem); margin:1.125rem 0 0.75rem; }
+  .hindi .section-title{ color:var(--hindi); }
+  .english .section-title{ color:var(--english); }
+
+  .grid{ display:grid; gap:0.875rem; grid-template-columns:repeat(auto-fill,minmax(13.75rem,1fr)); }
+
+  .poem-card{
+    background:#fff; border-radius:1.25rem; border:2px solid #eee; padding:1.125rem 1rem 1.25rem;
+    text-align:center; cursor:pointer; user-select:none; position:relative;
+    transition:transform .12s ease;
+  }
+  .poem-card:active{ transform:scale(.96); }
+  .poem-card.speaking{ box-shadow:0 0 0 4px currentColor, 0 0 22px 6px currentColor; }
+  .poem-card.hindi-card{ color:var(--hindi); border-color:#ffd6e6; }
+  .poem-card.english-card{ color:var(--english); border-color:#c9e2ff; }
+  .poem-card .emoji{ font-size:2.5rem; }
+  .poem-card .title{ font-size:1.0625rem; font-weight:800; color:var(--ink); margin:0.375rem 0 0.625rem; }
+  .poem-card .body{ font-size:0.9375rem; line-height:1.65; font-weight:600; color:#4a465c; white-space:pre-line; text-align:center; }
+  .poem-card .replay-tag{ margin-top:0.75rem; font-size:0.75rem; font-weight:800; color:var(--muted); }
+
+  /* ---------- SINGLE / FLASHCARD VIEW ---------- */
+  .single-wrap{ display:none; padding:0.625rem 0 1.125rem; }
+  .single-nav-row{ display:flex; align-items:center; justify-content:center; gap:0.625rem; max-width:34.375rem; margin:0 auto; }
+  .nav-btn{ flex:0 0 auto; width:3.25rem; height:3.25rem; border-radius:50%; border:none; background:#fff; box-shadow:0 4px 0 rgba(0,0,0,.1); font-size:1.375rem; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--ink); }
+  .nav-btn:disabled{ opacity:.3; cursor:default; }
+
+  .single-shell{
+    flex:1 1 auto; max-width:24.375rem; min-height:20rem; border-radius:2rem; padding:1.75rem 1.375rem 1.5rem;
+    text-align:center; position:relative; cursor:pointer; user-select:none;
+    box-shadow:0 10px 0 rgba(0,0,0,.08);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.5rem;
+  }
+  .single-shell.pulse{ animation:shellpulse 0.6s ease infinite alternate; }
+  @keyframes shellpulse{ from{ box-shadow:0 10px 0 rgba(0,0,0,.08); } to{ box-shadow:0 10px 0 rgba(0,0,0,.08), 0 0 0 8px rgba(255,255,255,.55); } }
+  .single-shell.theme-hindi{ background:linear-gradient(160deg,var(--hindi-grad1),var(--hindi-grad2)); }
+  .single-shell.theme-english{ background:linear-gradient(160deg,var(--english-grad1),var(--english-grad2)); }
+
+  .single-emoji{ font-size:3.75rem; line-height:1; }
+  .single-title{ font-size:1.25rem; font-weight:800; color:#fff; text-shadow:0 2px 0 rgba(0,0,0,.12); }
+  .single-body{ font-size:1.0625rem; font-weight:700; color:#2b2140; background:rgba(255,255,255,.65); padding:0.75rem 1rem; border-radius:1rem; white-space:pre-line; line-height:1.7; }
+  .single-replay{ margin-top:0.375rem; border:none; background:rgba(255,255,255,.8); border-radius:999px; font-weight:800; font-size:0.8125rem; padding:0.5rem 1.125rem; cursor:pointer; color:var(--ink); display:flex; align-items:center; gap:0.375rem; }
+  .single-progress{ text-align:center; margin-top:0.875rem; font-weight:800; color:var(--muted); font-size:0.875rem; }
+  .single-progress .bar{ width:13.75rem; height:0.5rem; background:#eee; border-radius:99px; margin:0.375rem auto 0; overflow:hidden; }
+  .single-progress .bar-fill{ height:100%; background:var(--ink); border-radius:99px; }
+
+  footer{ text-align:center; color:var(--muted); font-weight:700; font-size:0.8125rem; margin-top:1.625rem; }
+  .note{ max-width:40rem; margin:0.75rem auto 0; text-align:center; font-size:0.75rem; color:var(--muted); }
+
+  @media (min-width:1400px){ main{ max-width:78.125rem; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📖 Little Stars Learning 📖</h1>
+  <p>प्यारी कविताएँ — जिस पर उंगली रखो, वो सुनाएगी!</p>
+  <div class="hint"><span class="dot"></span> Tap karke sunoo — dheere dheere, saaf awaaz mein!</div>
+</header>
+
+<nav class="tabs">
+  <button data-tab="hindi" class="active">🇮🇳 हिंदी कविताएँ</button>
+  <button data-tab="english">🔤 English Poems</button>
+</nav>
+
+<div class="toolbar">
+  <div class="segmented" id="mode-toggle">
+    <span class="seg-label">View:</span>
+    <button data-mode="grid" class="active">🔳 Sabhi</button>
+    <button data-mode="single">🎠 Ek-Ek</button>
+  </div>
+  <div class="segmented" id="screen-toggle">
+    <span class="seg-label">Screen:</span>
+    <button data-screen="mobile">📱 Mobile</button>
+    <button data-screen="pc">💻 PC</button>
+    <button data-screen="tv">📺 TV</button>
+  </div>
+</div>
+
+<main>
+
+  <section class="panel hindi active" id="panel-hindi">
+    <div class="section-title">हिंदी कविताएँ · Hindi Poems</div>
+    <div class="grid-wrap">
+      <div class="grid" id="grid-hindi"></div>
+    </div>
+    <div class="single-wrap" id="single-hindi-wrap">
+      <div class="single-nav-row">
+        <button class="nav-btn" data-prev="hindi">◀</button>
+        <div class="single-shell" id="single-hindi"></div>
+        <button class="nav-btn" data-next="hindi">▶</button>
+      </div>
+      <div class="single-progress" id="progress-hindi"></div>
+    </div>
+  </section>
+
+  <section class="panel english" id="panel-english">
+    <div class="section-title">English Poems · अंग्रेज़ी कविताएँ</div>
+    <div class="grid-wrap">
+      <div class="grid" id="grid-english"></div>
+    </div>
+    <div class="single-wrap" id="single-english-wrap">
+      <div class="single-nav-row">
+        <button class="nav-btn" data-prev="english">◀</button>
+        <div class="single-shell" id="single-english"></div>
+        <button class="nav-btn" data-next="english">▶</button>
+      </div>
+      <div class="single-progress" id="progress-english"></div>
+    </div>
+  </section>
+
+</main>
+
+<p class="note">Ye sabhi kavitayein/poems bachchon ke liye khaas taur par likhi gayi original rachnayein hain.</p>
+<footer>Little Stars Learning — बच्चों की पाठशाला</footer>
+
+<script>
+/* ================= SPEECH ENGINE (same as chart.html) ================= */
+let voices = [];
+function loadVoices(){ voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : []; }
+if ('speechSynthesis' in window){
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+function pickVoice(lang){
+  if(!voices.length) return null;
+  let exact = voices.find(v => v.lang && v.lang.toLowerCase() === lang.toLowerCase());
+  if(exact) return exact;
+  let starts = voices.find(v => v.lang && v.lang.toLowerCase().startsWith(lang.slice(0,2)));
+  return starts || null;
+}
+function speakOne(text, lang, rate, pitch){
+  return new Promise((resolve) => {
+    if(!('speechSynthesis' in window)){ resolve(); return; }
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang;
+    const v = pickVoice(lang);
+    if(v) u.voice = v;
+    u.rate = rate;
+    u.pitch = pitch;
+    u.onend = resolve;
+    u.onerror = resolve;
+    window.speechSynthesis.speak(u);
+  });
+}
+function pause(ms){ return new Promise(r => setTimeout(r, ms)); }
+async function speakSequence(items){
+  if('speechSynthesis' in window) window.speechSynthesis.cancel();
+  for(let i=0;i<items.length;i++){
+    await speakOne(items[i].text, items[i].lang, items[i].rate, items[i].pitch);
+    if(i < items.length-1) await pause(320);
+  }
+}
+/* Splits a poem's lines into a speak-sequence for one language */
+function poemLines(body, lang, rate, pitch){
+  return body.split('\n').map(l => l.trim()).filter(Boolean)
+    .map(line => ({ text: line, lang, rate, pitch }));
+}
+const HI_RATE = 0.74, HI_PITCH = 1.05;
+const EN_RATE = 0.68, EN_PITCH = 1.05;
+
+function animateCard(card){
+  document.querySelectorAll('.poem-card.speaking').forEach(c => c.classList.remove('speaking'));
+  card.classList.add('speaking');
+  clearTimeout(card._t);
+  card._t = setTimeout(() => card.classList.remove('speaking'), 6000);
+}
+function makeCard(className, title, emoji, bodyText, onTap){
+  const card = document.createElement('div');
+  card.className = 'poem-card ' + className;
+  card.innerHTML = `<div class="emoji">${emoji}</div>
+                     <div class="title">${title}</div>
+                     <div class="body">${bodyText}</div>
+                     <div class="replay-tag">🔊 Tap to listen</div>`;
+  card.addEventListener('click', () => { animateCard(card); onTap(); });
+  return card;
+}
+
+/* ================= DATA — ORIGINAL POEMS ================= */
+const hindiPoems = [
+  {title:'सूरज मामा', emoji:'☀️', body:'सूरज मामा निकले सवेरे,\nरोशनी लाएं चारों ओर मेरे।\nपंछी गाएं मीठे गीत,\nखुश हो जाए सबका जी।'},
+  {title:'बारिश की बूँदें', emoji:'🌧️', body:'टप टप टप बूँदें गिरें,\nबादल काले घिर घिर आएं।\nछाता लेकर बच्चे निकले,\nखुशियाँ मन में भर भर लाएं।'},
+  {title:'प्यारी तितली', emoji:'🦋', body:'रंग बिरंगी प्यारी तितली,\nफूलों पर मंडराए।\nइस डाली से उस डाली तक,\nहौले हौले उड़ती जाए।'},
+  {title:'गोल चंदा', emoji:'🌙', body:'गोल गोल है चंदा मामा,\nआसमान में चमके प्यारा।\nतारे संग वो खेल दिखाए,\nरात को दे रोशनी सारा।'},
+  {title:'मेरी गइया', emoji:'🐄', body:'सफ़ेद काली मेरी गइया,\nघास चरे वो रोज सवेरे।\nदूध मीठा हमको देवे,\nप्यार से पाले सारा परिवार।'},
+  {title:'फूलों की बात', emoji:'🌸', body:'रंग बिरंगे फूल खिले हैं,\nबगिया में मुस्काएं।\nभँवरे गाएं गीत सुरीले,\nतितली संग नाचे जाएं।'},
+  {title:'किताब मेरी दोस्त', emoji:'📖', body:'किताब मेरी अच्छी दोस्त,\nकहानियाँ वो मुझे सुनाए।\nनए नए शब्द सिखाए,\nज्ञान का दीप जलाए।'},
+  {title:'पतंग उड़े', emoji:'🪁', body:'नीले अंबर में पतंग उड़े,\nडोर पकड़े बच्चे हँसे।\nहवा संग वो ऊँची जाए,\nखुशियों के रंग बिखेरे।'},
+  {title:'मौसम आए', emoji:'🍂', body:'गर्मी सर्दी बरसात आए,\nमौसम बदले हर बार।\nहर मौसम की अपनी शान,\nप्रकृति का है अनोखा प्यार।'},
+  {title:'मेरा घर', emoji:'🏠', body:'छोटा प्यारा मेरा घर,\nसब मिलकर रहते साथ।\nमाँ पापा दादा दादी,\nखुशियाँ बांटे हाथों हाथ।'},
+];
+
+const englishPoems = [
+  {title:'Sunshine Song', emoji:'☀️', body:'Sun says hello up in the sky,\nWaking birds that swoop and fly.\nGolden light on morning dew,\nGood morning, sun, we love you!'},
+  {title:'Little Raindrop', emoji:'🌧️', body:'Pitter patter, raindrops fall,\nDancing softly on us all.\nPuddles form for jumping fun,\nRainbow comes when we are done.'},
+  {title:'Rainbow Colours', emoji:'🌈', body:'Red and orange, yellow bright,\nGreen and blue, a lovely sight.\nPurple too, up in the sky,\nSeven colours, way up high.'},
+  {title:'My Little Kitten', emoji:'🐱', body:'Soft and fluffy, small and sweet,\nKitty walks on gentle feet.\nPurring softly on my lap,\nTime to have a cozy nap.'},
+  {title:'Twinkling Stars', emoji:'⭐', body:'Stars are twinkling way up high,\nShining bright across the sky.\nLittle lights so far away,\nGuiding travelers on their way.'},
+  {title:'Busy Bee', emoji:'🐝', body:'Buzzing bee from flower to flower,\nWorking hard for many an hour.\nMaking honey sweet and gold,\nA tiny story often told.'},
+  {title:'Happy Butterfly', emoji:'🦋', body:'Flutter, flutter, butterfly,\nDancing softly, way up high.\nWings of colours, red and blue,\nFlying gardens, morning dew.'},
+  {title:'My School Bag', emoji:'🎒', body:'Books and pencils, colors too,\nPacked inside my bag so blue.\nOff to school with joy each day,\nLearning, laughing, time to play.'},
+  {title:'The Moon at Night', emoji:'🌙', body:'Silver moon up in the sky,\nWatching stars go floating by.\nGentle light on rooftops white,\nSweet dreams come with soft moonlight.'},
+  {title:'Growing Flower', emoji:'🌻', body:'Tiny seed beneath the ground,\nRain and sunshine all around.\nSlowly, slowly, watch it grow,\nPretty flower, in a row.'},
+];
+
+/* ================= GRID RENDER ================= */
+function renderGrid(containerId, data, cellClass, lang, rate, pitch){
+  const container = document.getElementById(containerId);
+  data.forEach(({title, emoji, body}) => {
+    const card = makeCard(cellClass, title, emoji, body,
+      () => speakSequence(poemLines(body, lang, rate, pitch))
+    );
+    container.appendChild(card);
+  });
+}
+renderGrid('grid-hindi', hindiPoems, 'hindi-card', 'hi-IN', HI_RATE, HI_PITCH);
+renderGrid('grid-english', englishPoems, 'english-card', 'en-IN', EN_RATE, EN_PITCH);
+
+/* ================= SINGLE / FLASHCARD VIEW ================= */
+const singleState = {
+  hindi:   { data: hindiPoems,   index: 0, lang:'hi-IN', rate:HI_RATE, pitch:HI_PITCH },
+  english: { data: englishPoems, index: 0, lang:'en-IN', rate:EN_RATE, pitch:EN_PITCH },
+};
+
+function renderSingle(tab, autoSpeak){
+  const state = singleState[tab];
+  const item = state.data[state.index];
+  const shell = document.getElementById('single-' + tab);
+  const progress = document.getElementById('progress-' + tab);
+
+  shell.className = 'single-shell theme-' + tab;
+  shell.innerHTML = `<div class="single-emoji">${item.emoji}</div>
+                      <div class="single-title">${item.title}</div>
+                      <div class="single-body">${item.body}</div>
+                      <button class="single-replay">🔊 Dobara Suno</button>`;
+  shell.onclick = () => doSpeak();
+  shell.querySelector('.single-replay').onclick = (e) => { e.stopPropagation(); doSpeak(); };
+
+  function doSpeak(){
+    shell.classList.add('pulse');
+    speakSequence(poemLines(item.body, state.lang, state.rate, state.pitch))
+      .then(() => shell.classList.remove('pulse'));
+  }
+
+  const pct = Math.round(((state.index+1) / state.data.length) * 100);
+  progress.innerHTML = `${state.index+1} / ${state.data.length}
+    <div class="bar"><div class="bar-fill" style="width:${pct}%"></div></div>`;
+
+  document.querySelector(`[data-prev="${tab}"]`).disabled = state.index === 0;
+  document.querySelector(`[data-next="${tab}"]`).disabled = state.index === state.data.length - 1;
+
+  if(autoSpeak) doSpeak();
+}
+
+document.querySelectorAll('[data-prev]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.prev;
+    const state = singleState[tab];
+    if(state.index > 0){ state.index--; renderSingle(tab, true); }
+  });
+});
+document.querySelectorAll('[data-next]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.next;
+    const state = singleState[tab];
+    if(state.index < state.data.length - 1){ state.index++; renderSingle(tab, true); }
+  });
+});
+
+document.addEventListener('keydown', (e) => {
+  if(viewMode !== 'single') return;
+  const tab = currentTab;
+  if(e.key === 'ArrowRight') document.querySelector(`[data-next="${tab}"]`).click();
+  if(e.key === 'ArrowLeft') document.querySelector(`[data-prev="${tab}"]`).click();
+});
+
+['hindi','english'].forEach(tab => {
+  const shell = document.getElementById('single-' + tab);
+  let startX = null;
+  shell.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, {passive:true});
+  shell.addEventListener('touchend', (e) => {
+    if(startX === null) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    if(Math.abs(dx) > 45){
+      const btn = dx < 0 ? document.querySelector(`[data-next="${tab}"]`) : document.querySelector(`[data-prev="${tab}"]`);
+      if(btn && !btn.disabled) btn.click();
+    }
+    startX = null;
+  });
+});
+
+Object.keys(singleState).forEach(tab => renderSingle(tab, false));
+
+/* ================= TAB + MODE + SCREEN SWITCHING ================= */
+let currentTab = 'hindi';
+let viewMode = 'grid';
+
+document.querySelectorAll('nav.tabs button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    currentTab = btn.dataset.tab;
+    document.getElementById('panel-' + currentTab).classList.add('active');
+    if('speechSynthesis' in window) window.speechSynthesis.cancel();
+  });
+});
+
+document.getElementById('mode-toggle').querySelectorAll('button[data-mode]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById('mode-toggle').querySelectorAll('button[data-mode]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    viewMode = btn.dataset.mode;
+    document.querySelectorAll('.grid-wrap').forEach(el => el.style.display = viewMode === 'grid' ? '' : 'none');
+    document.querySelectorAll('.single-wrap').forEach(el => el.style.display = viewMode === 'single' ? 'block' : 'none');
+    if('speechSynthesis' in window) window.speechSynthesis.cancel();
+  });
+});
+
+function setScreenMode(mode){
+  document.documentElement.classList.remove('view-mobile','view-pc','view-tv');
+  document.documentElement.classList.add('view-' + mode);
+  document.getElementById('screen-toggle').querySelectorAll('button[data-screen]').forEach(b => {
+    b.classList.toggle('active', b.dataset.screen === mode);
+  });
+}
+document.getElementById('screen-toggle').querySelectorAll('button[data-screen]').forEach(btn => {
+  btn.addEventListener('click', () => setScreenMode(btn.dataset.screen));
+});
+setScreenMode(window.innerWidth < 700 ? 'mobile' : 'pc');
+</script>
+</body>
+</html>
